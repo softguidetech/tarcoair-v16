@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_related_party_bill,related_party_bill,model_related_party_bill,vendor_related_group,1,1,1,1
+access_related_party_bill_line,related_party_bill_line,model_related_party_bill_line,vendor_related_group,1,1,1,1

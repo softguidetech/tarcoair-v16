@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+
+        <record id="vendor_related_group" model="res.groups">
+            <field name="name">Vend Related Party Group</field>
+            <field name="implied_ids" eval="[(4, ref('account.group_account_user'))]"/>
+        </record>
+
+
+    </data>
+</odoo>

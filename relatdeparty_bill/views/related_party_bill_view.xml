@@ -1,0 +1,112 @@
+<odoo>
+    <data>
+
+
+        <record id="related_part_code" model="ir.sequence">
+            <field name="name">Related Party sequence</field>
+            <field name="code">related.party.code</field>
+            <field name="prefix">RP/Bill/%(range_year)s/</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field eval="True" name="use_date_range"/>
+            <field eval="True" name="company_id"/>
+            <field name="padding">4</field>
+        </record>
+
+
+        <record id="related_bill_form_view" model="ir.ui.view">
+            <field name="name">related.party.bill.form</field>
+            <field name="model">related.party.bill</field>
+            <field name="arch" type="xml">
+                <form string="Loan Request">
+                    <header>
+                        <button name="action_confirm" type="object" string="Confirm" states="draft" class="oe_highlight"/>
+                        <button name="action_cancel" type="object" string="Cancel" states="open" />
+                        <button name="action_draft" type="object" string="Reset to Draft" states="cancel" />
+                        <field name="state" widget="statusbar"  />
+
+                    </header>
+
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                             <button type="object" name="action_move_view" class="oe_stat_button"
+                                    icon="fa-bars" groups="account.group_account_manager">
+                                <field name="count_journal_entry" widget="statinfo" string="Journal Entry"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <field name="related_party_name" />
+                            <field name="partner_id"  attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="ref" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="date" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="journal_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="company_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <field name="currency_id" attrs="{'readonly':[('state','!=','draft')]}"/>
+
+                        </group>
+                        <notebook>
+                            <page string="Bill Lines">
+                                <field name="line_ids">
+                                    <tree string="Lines" editable="bottom">
+<!--                                        <field name="related_party_name"/>-->
+                                        <field name="name"/>
+                                        <field name="account_id"/>
+                                        <field name="partner_id"/>
+                                        <field name="qty"/>
+                                        <field name="price"/>
+                                        <field name="subtotal"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" >
+                                    <field name="total_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+<!--                                    <field name="total_paid_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>-->
+<!--                                    <field name="balance_amount" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>-->
+                                </group>
+                                <div class="oe_clear"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="related_party_bill_tree_view" model="ir.ui.view">
+        <field name="name">related.party.bill.tree</field>
+        <field name="model">related.party.bill</field>
+        <field name="arch" type="xml">
+            <tree string="Related Part Bill">
+                <field name="related_party_name"/>
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="journal_id"/>
+                <field name="company_id"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+        <record id="action_related_party" model="ir.actions.act_window">
+            <field name="name">Related Party Bill</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">related.party.bill</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="vendor_party_root" groups="relatdeparty_bill.vendor_related_group" name="Related Party Bill" parent="account.menu_finance_payables" action="action_related_party"/>
+
+
+    </data>
+</odoo>
