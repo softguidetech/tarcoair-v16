@@ -81,8 +81,7 @@ class CashVoucher(models.Model):
     user_name = fields.Many2one('res.users', string='User Name', readonly=True, default=_default_employee_get)
     # manager_id = fields.Many2one('res.users','Manager',default=manager_default)
     pay_type = fields.Boolean(string='تفاصيل الشيك',copy=False)
-    x_bill_no = fields.Many2one('account.move',string='Bill No')
-    # domain = "[('type','=','in_invoice')]"
+    x_bill_no = fields.Many2one('account.move',string='Bill No',domain="[('move_type','=','in_invoice')]")
     x_doc_count = fields.Integer(compute='compute_permits',
                                string="Bills")
     request_date = fields.Date('التاريخ', default=lambda self: fields.Date.today(), track_visibility='onchange')

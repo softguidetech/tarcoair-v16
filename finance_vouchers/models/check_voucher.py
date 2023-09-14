@@ -77,8 +77,7 @@ class CheckVoucher(models.Model):
     #     return self.env.user.manager_id
 
     name = fields.Char('Reference',readonly=True,default='New')
-    x_bill_no = fields.Many2one('account.move', string='Bill No')
-    # , domain = "[('type','=','in_invoice')]"
+    x_bill_no = fields.Many2one('account.move', string='Bill No', domain = "[('move_type','=','in_invoice')]")
 
     user_name = fields.Many2one('res.users', string='User Name',readonly=True, default=_default_employee_get)
     # manager_id = fields.Many2one('res.users','Manager',default=manager_default)
