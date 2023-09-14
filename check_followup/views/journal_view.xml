@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+
+        <record id="view_form_journal_inherit" model="ir.ui.view">
+            <field name="name">view.form.journal.inherit</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <notebook>
+                    <page string="Accounting">
+                        <field name="type" invisible="1"/>
+                        <group col="4">
+
+                            <field name="out_account" attrs="{'invisible': [('type','!=','bank')],
+                            'required': [('type','=','bank')]}"/>
+                            <field name="in_account" attrs="{'invisible': [('type','!=','bank')],
+                            'required': [('type','=','bank')]}"/>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

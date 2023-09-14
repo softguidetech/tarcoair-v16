@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_check_followups,check.followup,model_check_followup,account.group_account_user,1,1,1,1
+access_check_log,check.log,model_check_log,account.group_account_user,1,1,1,1

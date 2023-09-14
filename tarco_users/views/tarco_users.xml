@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_account_move_form_inherit" model="ir.ui.view">
+            <field name="name">view.account.move.form.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="username_id" options="{'no_create': True}"/>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="view_account_cash_voucher_form_inherit" model="ir.ui.view">
+            <field name="name">view.account.cash.voucher.form.inherit</field>
+            <field name="model">cash.voucher</field>
+            <field name="inherit_id" ref="finance_vouchers.cash_voucher_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='request_date']" position="before">
+                    <field name="username_id" options="{'no_create': True}"/>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="view_account_cash_request_form_inherit" model="ir.ui.view">
+            <field name="name">view.account.cash.request.form.inherit</field>
+            <field name="model">request.inbound</field>
+            <field name="inherit_id" ref="finance_vouchers.request_inbound_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='request_date']" position="before">
+                    <field name="username_id" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_account_check_voucher_form_inherit" model="ir.ui.view">
+            <field name="name">view.account.check.voucher.form.inherit</field>
+            <field name="model">check.voucher</field>
+            <field name="inherit_id" ref="finance_vouchers.check_voucher_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_name']" position="after">
+                    <field name="username_id"/>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="view_account_check_inbound_form_inherit" model="ir.ui.view">
+            <field name="name">view.account.check.inbound.form.inherit</field>
+            <field name="model">check.inbound</field>
+            <field name="inherit_id" ref="finance_vouchers.check_inbound_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_name']" position="after">
+                    <field name="username_id" options="{'no_create': True}"/>
+                </xpath>
+
+            </field>
+        </record>
+        <record id="tarco_users_tree" model="ir.ui.view">
+            <field name="name">tarco.users.tree</field>
+            <field name="model">tarco.users</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="tarco_users_form_view" model="ir.ui.view">
+            <field name="name">tarco.users.form</field>
+            <field name="model">tarco.users</field>
+            <field name="arch" type="xml">
+                <form string="User management" class="o_sale_order">
+                    <sheet>
+                        <field name="name"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_tarco_users" model="ir.actions.act_window">
+            <field name="name">Tarco Users</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tarco.users</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a New Order.
+                </p>
+            </field>
+        </record>
+        <menuitem name="Tarco Users" id="tarco_users_menu"/>
+        <menuitem id="tarco_users_ch" name="Tarco Users" parent="base.menu_users" action="action_tarco_users"
+                  sequence="1"/>
+    </data>
+</odoo>

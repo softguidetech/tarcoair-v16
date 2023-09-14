@@ -1,0 +1,122 @@
+<odoo>
+    <data>
+        <report
+                id="report_check_check_followup"
+                model="check.followup"
+                string="Check Report"
+                report_type="qweb-html"
+                name="check_followup.report_check"
+
+                file="check_followup.check_report"
+        />
+
+
+        <template id="report_check">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+
+                        <div class="page">
+                          <h1 style="font-size:18px;text-align:center;font-weight:bold;">تقرير شيكات</h1>
+                          <h2 style="font-size:18px;text-align:center;font-weight:bold">CHECKS REPORT</h2>
+
+                            <!--<h3>Serial <span t-field="o.name"/></h3>-->
+                        </div>
+
+                        <table class="table table-bordered">
+
+<div class="text-center">
+
+                            <thead>
+
+                                <tr style="text-align:center;">
+                                    <th><strong>المبلغ</strong></th>
+                                   <th><strong>الحالة</strong></th>
+                                    <th><strong>الوصف</strong></th>
+                                    <th><strong>البنك</strong></th>
+                                     <th><strong>المستفيد</strong></th>
+<th><strong>رقم الشيك</strong></th>
+                                    <th><strong>التاريخ </strong></th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+ <t t-foreach="docs" t-as="s">
+                                 <tr style="text-align:center;">
+
+<td>
+                                        <span t-esc="s.amount" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+                                    </td>
+                                    <td>
+                                        <t t-set="values" t-value="dict([('under_collection','تحت التحصيل'),('out_standing','شيك آجل'), ('deposit_check','تم التوريد'),('withdraw_check','مسحوب'),('reject','راجع'),(False,False)])"/>
+                                        <span t-esc="values[s.state]"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="s.memo"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="s.bank_id.name"/>
+                                    </td>
+                                      <td>
+                                        <span t-esc="s.partner_id.name"/>
+                                    </td>
+<td>
+                                        <span t-esc="s.cheque_number"/>
+                                    </td>
+                                    <td>
+                                        <span t-esc="s.check_date"/>
+                                    </td>
+                                    <!--<td>-->
+                                    <!--<span t-esc="', '.join(map(lambda x: x.name, line.taxes_id))"/>-->
+                                    <!--</td>-->
+
+
+                                </tr>
+ </t>
+
+                            </tbody>
+                            </div>
+                        </table>
+                <br></br>
+                        <br></br>
+
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                               <table class="table table-condensed">
+                                    <tr class="border-black">
+
+                                        <td style="font-weight:bold">
+                        <span t-esc="sum(s.amount for s in docs)" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+
+                                        </td>
+
+                                        <td class="text-right"><strong> الاجمالي الفرعي (ج.س)</strong></td>
+                                    </tr>
+
+                                    <tr class="border-black">
+                                      <td style="font-weight:bold">
+                        <span t-esc="sum(s.amount for s in docs)" t-options="{'widget': 'monetary', 'display_currency': res_company.currency_id}"/>
+
+
+
+                                        </td>
+                                        <td class="text-right"><strong>الاجمالي (ج.س)</strong></td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+</t>
+            </t>
+
+
+
+
+
+        </template>
+    </data>
+</odoo>

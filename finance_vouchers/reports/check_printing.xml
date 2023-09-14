@@ -1,0 +1,73 @@
+<odoo>
+    <data>
+        <template id="check_container">
+        <t t-set="body_classname" t-value="'container'"/>
+        <div class="article">
+            <t t-raw="0"/>
+        </div>
+    </template>
+<record model="report.paperformat" id="paperformat_attendance_recap_report">
+        <field name="name">Check print Page Format</field>
+            <field name="default" eval="True"/>
+            <field name="format">custom</field>
+            <field name="page_height">170</field>
+            <field name="page_width">85</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+    </record>
+        <report
+                id="print_check_report_finance"
+                model="check.voucher"
+                string="Print Check"
+
+                report_type="qweb-pdf"
+                name="finance_vouchers.report_check_printing"
+                file="finance_vouchers.check_printing"
+        />
+
+        <template id="report_check_printing">
+            <t t-call="web.html_container">
+                 <t t-call="check.voucher.check_container">
+
+<div class="page">
+                <div style="transform-origin:0% 100%;-webkit-transform:rotatez(90deg);position:absolute;top:45mm;left:-35mm;width: 170mm;height: 85mm;">
+
+ <div style="text-align:right;position:absolute;left:0mm;top:29mm;width:95mm;height:10mm">
+                            <div >
+                                <span style="font-family:arial;font-size:18px;font-weight:bold" t-esc="docs.num2wo"/>
+                            </div>
+                        </div>
+
+
+                        <div style="position:absolute;left:82mm;top:11mm">
+                            <div style="width:35mm;">
+                                <span t-esc="docs.check_date"/>
+                            </div>
+                        </div>
+
+
+                        <div style="position:absolute;left:66mm;top:50mm">
+                            <div>
+                                #<span style="-webkit-transform:rotate(90deg);" t-esc="'{:,}'.format(docs.amount)"/>#
+                            </div>
+                        </div>
+
+                        <div style="position:absolute;left:12mm;top:20mm;text-align:right;width:90mm">
+                            <div>
+                                <span t-esc="docs.person" style="font-family:arial;font-size:18px;font-weight:bold"/>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </t>
+                 </t>
+
+    </template>
+    </data>
+</odoo>
