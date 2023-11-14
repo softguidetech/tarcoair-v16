@@ -1,6 +1,8 @@
-from odoo import fields , models,api,tools,_
-from datetime import datetime,timedelta
+from odoo import fields, models, api, tools, _
+from datetime import datetime, timedelta
 from odoo.exceptions import ValidationError
+
+
 # from odoo import amount_to_text
 
 
@@ -11,7 +13,7 @@ class RelatedPartyBills(models.Model):
     _rec_name = 'partner_id'
 
     def _default_journal(self):
-        return self.env['account.journal'].search([('type','=','purchase')],limit=1)
+        return self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
 
     def _default_currency(self):
         return self.env.user.company_id.currency_id
@@ -19,24 +21,24 @@ class RelatedPartyBills(models.Model):
     def _default_company(self):
         return self.env.user.company_id
 
-    name = fields.Char(string='Name',default='New')
-    partner_id = fields.Many2one('res.partner',string='Vendor',required=True)
-    date = fields.Date(string='Date',required=True)
-    journal_id = fields.Many2one('account.journal',string='Journal',default=_default_journal)
-    state = fields.Selection([('draft','Draft'),
-                              ('open','Open'),
-                              ('partial','Partial'),
-                              ('cancel','Cancelled'),
-                              ('paid','Paid')],default='draft')
-    bill_move_id = fields.Many2one('account.move',string='Bill Move')
-    payment_move_id = fields.Many2one('account.move',string='Payment Move')
-    line_ids = fields.One2many('related.party.bill.line','bill_id',string='Bill Lines')
-    company_id = fields.Many2one('res.company',string='Company',required=True,default=_default_company)
-    currency_id = fields.Many2one('res.currency',string='Currency',required=True,default=_default_currency)
-    total_amount = fields.Monetary(string='Total amount',compute='_compute_total')
-    ref = fields.Char(string='Reference',required=True)
+    name = fields.Char(string='Name', default='New')
+    partner_id = fields.Many2one('res.partner', string='Vendor', required=True)
+    date = fields.Date(string='Date', required=True)
+    journal_id = fields.Many2one('account.journal', string='Journal', default=_default_journal)
+    state = fields.Selection([('draft', 'Draft'),
+                              ('open', 'Open'),
+                              ('partial', 'Partial'),
+                              ('cancel', 'Cancelled'),
+                              ('paid', 'Paid')], default='draft')
+    bill_move_id = fields.Many2one('account.move', string='Bill Move')
+    payment_move_id = fields.Many2one('account.move', string='Payment Move')
+    line_ids = fields.One2many('related.party.bill.line', 'bill_id', string='Bill Lines')
+    company_id = fields.Many2one('res.company', string='Company', required=True, default=_default_company)
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True, default=_default_currency)
+    total_amount = fields.Monetary(string='Total amount', compute='_compute_total')
+    ref = fields.Char(string='Reference', required=True)
     count_journal_entry = fields.Integer(compute='_compute_jv')
-    related_party_name = fields.Char(string='Related party',)
+    related_party_name = fields.Char(string='Related party', )
 
     def _compute_jv(self):
         for rec in self:
@@ -54,7 +56,7 @@ class RelatedPartyBills(models.Model):
     def amount_currency_credit(self):
         total = 0
         for rec in self.line_ids:
-            total+=rec.subtotal
+            total += rec.subtotal
         return total * -1
 
     def action_confirm(self):
@@ -84,8 +86,9 @@ class RelatedPartyBills(models.Model):
             'journal_id': self.journal_id.id,
             'date': self.date,
             'ref': self.ref,
-            'invoice_line_ids': l,
-        }
+            # 'invoice_line_ids': l,
+            "invoice_line_ids": [(0, 0, l)]
+            }
 
         self.bill_move_id = account_move_object.create(vals)
         self.bill_move_id.action_post()
@@ -145,8 +148,8 @@ class RelatedPartyBills(models.Model):
     def _compute_total(self):
         total = 0
         for rec in self:
-            for line in  rec.line_ids:
-                total+=line.subtotal
+            for line in rec.line_ids:
+                total += line.subtotal
             rec.total_amount = total
 
     @api.model
@@ -172,18 +175,19 @@ class RelatedPartyBills(models.Model):
 
             }
 
+
 class RelatedPartyBillsLine(models.Model):
     _name = 'related.party.bill.line'
 
-    name = fields.Char(string='Description',required=True)
-    qty = fields.Float(string='Quantity',required=True)
-    price = fields.Float(string='Unit Price',required=True)
-    subtotal = fields.Float(string='Subtotal',compute='_compute_subtotal')
-    bill_id = fields.Many2one('related.party.bill',string='Bill')
-    partner_id = fields.Many2one('res.partner',string='Partner')
-    account_id = fields.Many2one('account.account',required=True)
+    name = fields.Char(string='Description', required=True)
+    qty = fields.Float(string='Quantity', required=True)
+    price = fields.Float(string='Unit Price', required=True)
+    subtotal = fields.Float(string='Subtotal', compute='_compute_subtotal')
+    bill_id = fields.Many2one('related.party.bill', string='Bill')
+    partner_id = fields.Many2one('res.partner', string='Partner')
+    account_id = fields.Many2one('account.account', required=True)
 
-    @api.depends('qty','price')
+    @api.depends('qty', 'price')
     def _compute_subtotal(self):
         total = 0
         for rec in self:
