@@ -42,6 +42,7 @@ class RelatedPartyBills(models.Model):
 
     def _compute_jv(self):
         for rec in self:
+            rec.count_journal_entry = 0
             if rec.bill_move_id:
                 rec.count_journal_entry = 1
             else:
