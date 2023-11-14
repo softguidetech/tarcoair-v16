@@ -93,7 +93,8 @@ class RelatedPartyBills(models.Model):
             'date': self.date,
             'ref': self.ref,
             # 'company_id': ,
-            'line_ids': l,
+            # 'line_ids': l,
+            'invoice_line_ids':[(0, 0, l)],
         }
         self.bill_move_id = account_move_object.create(vals)
         self.bill_move_id.action_post()
