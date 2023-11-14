@@ -60,45 +60,79 @@ class RelatedPartyBills(models.Model):
     def action_confirm(self):
         l = []
         account_move_object = self.env['account.move']
+
+        # Credit line
         credit_val = {
-            'move_id': self.bill_move_id.id,
             'name': 'Related Party' + ' ' + str(self.ref),
             'account_id': self.partner_id.property_account_payable_id.id,
             'credit': self.total_amount,
-            # 'analytic_account_id': self.analytic_account.id or False,
-            # 'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
-            # 'amount_currency': self.amount_currency_debit() or False,
-            # 'company_id': self.company_id.id,
-
         }
         l.append((0, 0, credit_val))
+
+        # Debit lines
         for rec in self.line_ids:
             debit_val = {
-
-                'move_id': rec.bill_id.bill_move_id.id,
                 'name': 'Related Party' + ' ' + str(rec.bill_id.ref),
                 'account_id': self.partner_id.property_account_payable_id.id,
                 'debit': rec.subtotal,
-                # 'currency_id': rec.bill_id.currency_id.id,
                 'partner_id': rec.partner_id.id,
-                # 'amount_currency': self.amount_currency_credit() or False,
-                # 'analytic_account_id': ,
-                # 'company_id': ,
-
             }
             l.append((0, 0, debit_val))
+
         vals = {
             'journal_id': self.journal_id.id,
             'date': self.date,
             'ref': self.ref,
-            # 'company_id': ,
-            # 'line_ids': l,
-            'invoice_line_ids':[(0, 0, l)],
+            'invoice_line_ids': l,
         }
+
         self.bill_move_id = account_move_object.create(vals)
         self.bill_move_id.action_post()
         self.state = 'open'
+
+    # def action_confirm(self):
+    #     l = []
+    #     account_move_object = self.env['account.move']
+    #     credit_val = {
+    #         'move_id': self.bill_move_id.id,
+    #         'name': 'Related Party' + ' ' + str(self.ref),
+    #         'account_id': self.partner_id.property_account_payable_id.id,
+    #         'credit': self.total_amount,
+    #         # 'analytic_account_id': self.analytic_account.id or False,
+    #         # 'currency_id': self.currency_id.id,
+    #         'partner_id': self.partner_id.id,
+    #         # 'amount_currency': self.amount_currency_debit() or False,
+    #         # 'company_id': self.company_id.id,
+    #
+    #     }
+    #     l.append((0, 0, credit_val))
+    #     for rec in self.line_ids:
+    #         debit_val = {
+    #
+    #             'move_id': rec.bill_id.bill_move_id.id,
+    #             'name': 'Related Party' + ' ' + str(rec.bill_id.ref),
+    #             'account_id': self.partner_id.property_account_payable_id.id,
+    #             'debit': rec.subtotal,
+    #             # 'currency_id': rec.bill_id.currency_id.id,
+    #             'partner_id': rec.partner_id.id,
+    #             # 'amount_currency': self.amount_currency_credit() or False,
+    #             # 'analytic_account_id': ,
+    #             # 'company_id': ,
+    #
+    #         }
+    #         l.append((0, 0, debit_val))
+    #     vals = {
+    #         'journal_id': self.journal_id.id,
+    #         'date': self.date,
+    #         'ref': self.ref,
+    #         # 'company_id': ,
+    #         # 'line_ids': l,
+    #         'invoice_line_ids':[(0, 0, l)],
+    #     }
+    #     self.bill_move_id = account_move_object.create(vals)
+    #     self.bill_move_id.action_post()
+    #     self.state = 'open'
 
     def action_cancel(self):
         if self.bill_move_id:
