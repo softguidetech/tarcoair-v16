@@ -96,7 +96,7 @@ class RelatedPartyBills(models.Model):
             'line_ids': l,
         }
         self.bill_move_id = account_move_object.create(vals)
-        self.bill_move_id.post()
+        self.bill_move_id.button_post()
         self.state = 'open'
 
     def action_cancel(self):
