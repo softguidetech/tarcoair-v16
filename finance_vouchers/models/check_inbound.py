@@ -53,10 +53,10 @@ class CheckInbound(models.Model):
     amount = fields.Monetary('المبلغ',required=True, track_visibility='onchange')
     sequence = fields.Integer(required=True, default=1,)
     state = fields.Selection([('draft','مسودة'),
-                              ('post','مرحل'),
                               ('manager', 'اعتماد المدير'),
                               ('accountant', 'موافقة المحاسب'),
                               ('done', 'تم الاستلام'),
+                              ('post', 'مرحل'),
                               ('cancel','ملغي')],default='draft',track_visibility='onchange')
     # state = fields.Selection([('draft','مسودة'),
     #                           ('post','مرحل'),
