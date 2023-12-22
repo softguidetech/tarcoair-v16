@@ -55,8 +55,14 @@ class CheckInbound(models.Model):
     state = fields.Selection([('draft','مسودة'),
                               ('post','مرحل'),
                               ('manager', 'اعتماد المدير'),
+                              ('accountant', 'موافقة المحاسب'),
                               ('done', 'تم الاستلام'),
                               ('cancel','ملغي')],default='draft',track_visibility='onchange')
+    # state = fields.Selection([('draft','مسودة'),
+    #                           ('post','مرحل'),
+    #                           ('manager', 'اعتماد المدير'),
+    #                           ('done', 'تم الاستلام'),
+    #                           ('cancel','ملغي')],default='draft',track_visibility='onchange')
     num2wo = fields.Char(readonly=True, string="المبلغ كتابة",compute='_onchange_amount',store=True)
     check_journal_id = fields.Many2one('account.journal', readonly=True, string='دفتر اليومية',
                                       default=lambda self: self.env['account.journal'].search(
@@ -262,7 +268,8 @@ class CheckInbound(models.Model):
             amount = 0
             credit_name =  'شيك رقم' + '  '+self.cheque_number
             list = []
-            currency_id = False
+            # currency_id = False
+            currency_id = self.env.user.company_id.currency_id
             check_obj = self.env['check.followup']
             if self.electronig == True:
                 # self.account_id = self.cash_journal_id.default_debit_account_id
@@ -288,7 +295,7 @@ class CheckInbound(models.Model):
 
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
-                    currency_id = False
+                    currency_id = self.env.user.company_id.currency_id
                     curr_amount = 0
                 credit_val = {
 
@@ -370,7 +377,8 @@ class CheckInbound(models.Model):
             amount = 0
             credit_name = 'تحويل بنك بعملية رقم' + '  ' + self.cheque_number
             list = []
-            currency_id = False
+            # currency_id = False
+            currency_id = self.env.user.company_id.currency_id
 
             if self.electronig == True:
                 self.account_id = self.cash_journal_id.default_account_id
@@ -394,7 +402,8 @@ class CheckInbound(models.Model):
 
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
-                    currency_id = False
+                    currency_id = self.env.user.company_id.currency_id
+                    # currency_id = False
                     curr_amount = 0
 
                 credit_val = {
@@ -531,7 +540,7 @@ class CheckInbound(models.Model):
             desc = ', '.join(list)
             self.description = desc
             partner_name = i.partner_id.id
-        self.state = 'manager'
+        self.state = 'accountant'
 
 class CheckInboundLine(models.Model):
     _name = 'check.inbound.line'

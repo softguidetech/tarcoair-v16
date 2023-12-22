@@ -88,10 +88,18 @@ class CheckVoucher(models.Model):
     state = fields.Selection([('draft', 'مسودة'),
                               ('manager', 'اعتماد المدير'),
                               ('audit', 'اعتماد المراجعة'),
+                              ('accountant', 'موافقة المحاسب'),
                               ('done', 'اعتماد الخزينة'),
                               ('post', 'مرحل'),
 
                               ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
+    # state = fields.Selection([('draft', 'مسودة'),
+    #                           ('manager', 'اعتماد المدير'),
+    #                           ('audit', 'اعتماد المراجعة'),
+    #                           ('done', 'اعتماد الخزينة'),
+    #                           ('post', 'مرحل'),
+    #
+    #                           ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
     num2wo = fields.Char(readonly=True, string="المبلغ كتابة",compute='_onchange_amount',store=True)
     check_journal_id = fields.Many2one('account.journal', readonly=True, string='دفتر اليومية',
                                        default=lambda self: self.env['account.journal'].search(
@@ -364,7 +372,7 @@ class CheckVoucher(models.Model):
             amount = 0
             credit_name =  'شيك رقم' + '  '+str(self.cheque_number)
             list = []
-            currency_id = False
+            currency_id = self.env.user.company_id.currency_id
             check_obj = self.env['check.followup']
             for i in self.custody_line_ids:
                 description = i.name
@@ -384,7 +392,8 @@ class CheckVoucher(models.Model):
 
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
-                    currency_id = False
+                    # currency_id = False
+                    currency_id = self.env.user.company_id.currency_id
                     curr_amount = 0
                 debit_val = {
                 'move_id': self.move_id.id,
@@ -536,7 +545,8 @@ class CheckVoucher(models.Model):
             desc = ', '.join(list)
             self.description = desc
             partner_name = i.partner_id.id
-        self.state = 'manager'
+        # self.state = 'manager'
+        self.state = 'accountant'
     def confirm_audit(self):
         list = []
         for i in self.custody_line_ids:

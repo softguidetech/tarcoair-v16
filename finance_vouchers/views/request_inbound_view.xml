@@ -178,9 +178,15 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="confirm_post" string="ترحيل" type="object"
-                                class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>
-                        <field name="state" widget="statusbar"/>
+                        <button name="confirm_manager" string="إلى المحاسب" type="object"
+                                class="oe_highlight" states="draft" groups="base.group_user"/>
+<!--                        <button name="confirm_post" string="ترحيل" type="object"-->
+<!--                                class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>-->
+                        <button name="confirm_post" string="تأكيد المشاركة" type="object"
+                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>
+                         <button name="unlink" string="الغاء" type="object"
+                                states="post" groups="account.group_account_manager"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>
                     </header>
 
                     <sheet>

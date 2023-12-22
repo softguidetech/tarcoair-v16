@@ -56,20 +56,23 @@
                 <form>
                     <header>
 
-                        <button name="confirm_manager" string="إلي المدير" type="object"
+                        <button name="confirm_manager" string="إلى المحاسب" type="object"
                                 class="oe_highlight" states="draft" groups="base.group_user"/>
+                        <!--                        <button name="confirm_manager" string="إلي المدير" type="object"-->
+                        <!--                                class="oe_highlight" states="draft" groups="base.group_user"/>-->
                         <button name="reject" string="draft" type="object"
                                 class="oe_highlight" states="done" groups="base.group_user"/>
                         <button name="confirm_cashier" string="الي المراجعة الداخلية" type="object"
                                 class="oe_highlight" states="manager" groups="finance_vouchers.group_cash_voucher_cs"/>
                         <button name="unlink" string="الغاء" type="object"
-                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>
+                                states="post" groups="account.group_account_manager"/>
+<!--                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>-->
                         <button name="confirm_audit" string="إلي الخزينة" type="object"
                                 class="oe_highlight" states="audit" groups="finance_vouchers.group_cash_voucher_cs"/>
-<!--                        <button name="confirm_post" string="تأكيد" type="object"-->
-<!--                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>-->
+                        <!--                        <button name="confirm_post" string="تأكيد" type="object"-->
+                        <!--                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>-->
                         <button name="confirm_post" string="تأكيد" type="object"
-                                class="oe_highlight" states="accountant" groups="finance_vouchers.group_cash_voucher_mg"/>
+                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>
                     </header>
                     <sheet>

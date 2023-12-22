@@ -49,10 +49,18 @@ class RequestInbound(models.Model):
     state = fields.Selection([('draft', 'مسودة'),
                               ('manager', 'اعتماد المدير'),
                               ('audit', 'اعتماد المراجعة'),
+                              ('accountant', 'موافقة المحاسب'),
                               ('done', 'اعتماد الخزينة'),
                               ('post', 'مرحل'),
 
                               ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
+    # state = fields.Selection([('draft', 'مسودة'),
+    #                           ('manager', 'اعتماد المدير'),
+    #                           ('audit', 'اعتماد المراجعة'),
+    #                           ('done', 'اعتماد الخزينة'),
+    #                           ('post', 'مرحل'),
+    #
+    #                           ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
 
     company_id = fields.Many2one('res.company', string="الشركة", default=default_company)
     num2wo = fields.Char(string="المبلغ كتابة", compute='_onchange_amount', store=True)
@@ -423,7 +431,7 @@ class RequestInbound(models.Model):
             desc = ', '.join(list)
             self.description = desc
             partner_name = i.partner_id.id
-        self.state = 'manager'
+        self.state = 'accountant'
 
     def confirm_audit(self):
         list = []
