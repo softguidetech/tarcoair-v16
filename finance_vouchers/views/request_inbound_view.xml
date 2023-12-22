@@ -49,80 +49,164 @@
         </record>
 
 
+        <!--        <record id="request_inbound_form" model="ir.ui.view">-->
+        <!--            <field name="name">request.inbound.form</field>-->
+        <!--            <field name="model">request.inbound</field>-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <form>-->
+        <!--                    <header>-->
+
+
+        <!--                        <button name="confirm_post" string="ترحيل" type="object"-->
+        <!--                                class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>-->
+
+
+        <!--                        <field name="state" widget="statusbar"/>-->
+        <!--                    </header>-->
+        <!--                    <sheet>-->
+        <!--                        <div class="oe_button_box" name="button_box">-->
+        <!--                            <button type="object" name="action_move" class="oe_stat_button"-->
+        <!--                                    icon="fa-bars" groups="account.group_account_manager">-->
+        <!--                                <field name="count_je" widget="statinfo" string="Expense Entry"/>-->
+        <!--                            </button>-->
+
+        <!--                        </div>-->
+        <!--                        <group colspan="4">-->
+        <!--                            <div class="oe_title">-->
+        <!--                                &lt;!&ndash;<label for="name" class="oe_edit_only"/>&ndash;&gt;-->
+        <!--                                <h2>-->
+        <!--                                    <field name="name"/>-->
+        <!--                                </h2>-->
+        <!--                            </div>-->
+        <!--                        </group>-->
+        <!--                        &lt;!&ndash;<group colspan="4" string="Petty cash Balance">&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<div >&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<h3><field name="total_history_amount"/></h3>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;</div>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;</group>&ndash;&gt;-->
+        <!--                        <group col="4" string="Details">-->
+        <!--                            <field name="user_name"/>-->
+
+        <!--                            &lt;!&ndash;<field name="pay_type"/>&ndash;&gt;-->
+        <!--                            <field name="request_date" attrs="{'readonly': [('state','not in',['draft'])]}"/>-->
+        <!--                            &lt;!&ndash;<field name="description" attrs="{'readonly': [('state','not in',['draft'])]}"/>&ndash;&gt;-->
+        <!--                            <field name="amount" attrs="{'readonly': [('state','not in',['draft'])]}"/>-->
+        <!--                            <field name="num2wo" readonly="1"/>-->
+        <!--                            <field name="currency_id" attrs="{'readonly': [('state','not in',['draft'])]}"/>-->
+        <!--                            <field name="company_id" readonly="1" invisible="1"/>-->
+
+
+        <!--                        </group>-->
+        <!--                        &lt;!&ndash;<group >&ndash;&gt;-->
+
+        <!--                        &lt;!&ndash;<group col="4">&ndash;&gt;-->
+
+        <!--                        &lt;!&ndash;<field name="unit_500"    attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_tl_500"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_200"    attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_tl_200"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_100"   attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_tl_100"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_50"   attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_tl_50"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_20"   attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_tl_20"  nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_10"   attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_tl_10"   nolabel="1" attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;</group>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<group col="6">&ndash;&gt;-->
+
+        <!--                        &lt;!&ndash;<field name="unit_other"    attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="total_other_value"   attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;<field name="unit_tl_other"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+
+
+        <!--                        &lt;!&ndash;<field name="total_units"  readonly="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>&ndash;&gt;-->
+        <!--                        &lt;!&ndash;</group>&ndash;&gt;-->
+
+        <!--                        <notebook>-->
+        <!--                            <page string="Expenses Line">-->
+        <!--                                <field name="custody_line_ids">-->
+        <!--                                    <tree editable="bottom">-->
+        <!--                                        <field name="state" invisible="1"/>-->
+        <!--                                        <field name="account_id" onchange="_get_partner"/>-->
+        <!--                                        <field name="partner_id"/>-->
+        <!--                                        <field name="name"/>-->
+        <!--                                        <field name="currency_id"/>-->
+
+        <!--                                        <field name="doc_attachment_id" widget="many2many_binary"/>-->
+
+        <!--                                        &lt;!&ndash;<field name="analytic_accont_id"  />&ndash;&gt;-->
+        <!--                                        <field name="amount"/>-->
+
+        <!--                                    </tree>-->
+        <!--                                </field>-->
+        <!--                                <group class="oe_subtotal_footer oe_right">-->
+        <!--                                    &lt;!&ndash;<field name="amount_untaxed"/>&ndash;&gt;-->
+        <!--                                    <field name="total_with_ex"/>-->
+
+        <!--                                    <field name="total" class="oe_subtotal_footer_separator"/>-->
+        <!--                                </group>-->
+        <!--                            </page>-->
+
+        <!--                            <page string="Accounting Details">-->
+        <!--                                &lt;!&ndash;</group>&ndash;&gt;-->
+        <!--                                <group col="4" colspan="4">-->
+
+        <!--                                    <field name="cash_journal_id" options="{'no_create': True}"/>-->
+        <!--                                    <field name="account_id" options="{'no_create': True}"/>-->
+
+        <!--                                    <field name="move_id" readonly="1"/>-->
+
+
+        <!--                                </group>-->
+        <!--                            </page>-->
+        <!--                        </notebook>-->
+
+        <!--                    </sheet>-->
+        <!--                    <div class="oe_chatter">-->
+        <!--                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>-->
+        <!--                        <field name="activity_ids" widget="mail_activity"/>-->
+        <!--                        <field name="message_ids" widget="mail_thread"/>-->
+        <!--                    </div>-->
+        <!--                </form>-->
+        <!--            </field>-->
+        <!--        </record>-->
         <record id="request_inbound_form" model="ir.ui.view">
             <field name="name">request.inbound.form</field>
             <field name="model">request.inbound</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
-
-
                         <button name="confirm_post" string="ترحيل" type="object"
                                 class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>
-
-
                         <field name="state" widget="statusbar"/>
                     </header>
+
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_move" class="oe_stat_button"
                                     icon="fa-bars" groups="account.group_account_manager">
                                 <field name="count_je" widget="statinfo" string="Expense Entry"/>
                             </button>
-
                         </div>
+
                         <group colspan="4">
                             <div class="oe_title">
-                                <!--<label for="name" class="oe_edit_only"/>-->
                                 <h2>
                                     <field name="name"/>
                                 </h2>
                             </div>
                         </group>
-                        <!--<group colspan="4" string="Petty cash Balance">-->
-                        <!--<div >-->
-                        <!--<h3><field name="total_history_amount"/></h3>-->
-                        <!--</div>-->
-                        <!--</group>-->
+
                         <group col="4" string="Details">
                             <field name="user_name"/>
-
-                            <!--<field name="pay_type"/>-->
                             <field name="request_date" attrs="{'readonly': [('state','not in',['draft'])]}"/>
-                            <!--<field name="description" attrs="{'readonly': [('state','not in',['draft'])]}"/>-->
                             <field name="amount" attrs="{'readonly': [('state','not in',['draft'])]}"/>
                             <field name="num2wo" readonly="1"/>
                             <field name="currency_id" attrs="{'readonly': [('state','not in',['draft'])]}"/>
                             <field name="company_id" readonly="1" invisible="1"/>
-
-
                         </group>
-                        <!--<group >-->
-
-                        <!--<group col="4">-->
-
-                        <!--<field name="unit_500"    attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_tl_500"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_200"    attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_tl_200"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_100"   attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_tl_100"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_50"   attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_tl_50"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_20"   attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_tl_20"  nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_10"   attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_tl_10"   nolabel="1" attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--</group>-->
-                        <!--<group col="6">-->
-
-                        <!--<field name="unit_other"    attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="total_other_value"   attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--<field name="unit_tl_other"   nolabel="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-
-
-                        <!--<field name="total_units"  readonly="1"  attrs="{'invisible': [('cash_unit','=',False)]}"/>-->
-                        <!--</group>-->
 
                         <notebook>
                             <page string="Expenses Line">
@@ -133,37 +217,27 @@
                                         <field name="partner_id"/>
                                         <field name="name"/>
                                         <field name="currency_id"/>
-
                                         <field name="doc_attachment_id" widget="many2many_binary"/>
-
-                                        <!--<field name="analytic_accont_id"  />-->
                                         <field name="amount"/>
-
                                     </tree>
                                 </field>
-                                <group class="oe_subtotal_footer oe_right">
-                                    <!--<field name="amount_untaxed"/>-->
-                                    <field name="total_with_ex"/>
 
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="total_with_ex"/>
                                     <field name="total" class="oe_subtotal_footer_separator"/>
                                 </group>
                             </page>
 
                             <page string="Accounting Details">
-                                <!--</group>-->
                                 <group col="4" colspan="4">
-
                                     <field name="cash_journal_id" options="{'no_create': True}"/>
                                     <field name="account_id" options="{'no_create': True}"/>
-
                                     <field name="move_id" readonly="1"/>
-
-
                                 </group>
                             </page>
                         </notebook>
-
                     </sheet>
+
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                         <field name="activity_ids" widget="mail_activity"/>
@@ -172,6 +246,7 @@
                 </form>
             </field>
         </record>
+
 
         <record id="sequence_request_inbound" model="ir.sequence">
             <field name="name">request inbound sequence</field>

@@ -66,9 +66,11 @@
                                 states="post" groups="finance_vouchers.group_cash_voucher_cs"/>
                         <button name="confirm_audit" string="إلي الخزينة" type="object"
                                 class="oe_highlight" states="audit" groups="finance_vouchers.group_cash_voucher_cs"/>
+<!--                        <button name="confirm_post" string="تأكيد" type="object"-->
+<!--                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>-->
                         <button name="confirm_post" string="تأكيد" type="object"
-                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>
-                        <field name="state" widget="statusbar"/>
+                                class="oe_highlight" states="accountant" groups="finance_vouchers.group_cash_voucher_mg"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">

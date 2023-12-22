@@ -91,11 +91,20 @@ class CashVoucher(models.Model):
     state = fields.Selection([('draft', 'مسودة'),
                               ('manager', 'اعتماد المدير'),
                               ('audit', 'اعتماد المراجعة'),
+                              ('accountant', 'موافقة المحاسب'),
                               ('done', 'اعتماد الخزينة'),
                               ('post', 'مرحل'),
 
 
                               ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
+    # state = fields.Selection([('draft', 'مسودة'),
+    #                           ('manager', 'اعتماد المدير'),
+    #                           ('audit', 'اعتماد المراجعة'),
+    #                           ('done', 'اعتماد الخزينة'),
+    #                           ('post', 'مرحل'),
+    #
+    #
+    #                           ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
 
     company_id = fields.Many2one('res.company', string="الشركة", default=default_company)
     num2wo = fields.Char(string="المبلغ كتابة", compute='_onchange_amount', store=True)
@@ -337,7 +346,8 @@ class CashVoucher(models.Model):
             list = []
             curr_amount = 0
             amount = 0
-            currency_id = False
+            # currency_id = False
+            currency_id = self.env.user.company_id.currency_id
             total=self.total
             for i in self.custody_line_ids:
                 description = i.name
@@ -353,7 +363,8 @@ class CashVoucher(models.Model):
 
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
-                    currency_id = False
+                    # currency_id = False
+                    currency_id = self.env.user.company_id.currency_id
                     curr_amount = 0
 
 
@@ -376,7 +387,8 @@ class CashVoucher(models.Model):
                     credit_curr_amount = self.amount
             if self.currency_id == self.env.user.company_id.currency_id:
                 credit_amount = self.amount
-                currency_id = False
+                # currency_id = False
+                currency_id = i.currency_id.id
                 credit_curr_amount = False
             credit_val = {
 
@@ -492,6 +504,76 @@ class CashVoucher(models.Model):
         #     'communication': self.name,
         # })
         # np.post()
+    # def confirm_post(self):
+    #     print("999999999999999999999999999999999999999")
+    #     account_move_object = self.env['account.move']
+    #
+    #     if not self.cash_journal_id and not self.account_id:
+    #         raise ValidationError(_('يرجي ادخال يومية السداد و الحساب'))
+    #     if self.amount != self.total:
+    #         raise ValidationError(_('اجمالي المبلغ لا يساوي اجمالي المصروف'))
+    #
+    #     l = []
+    #     list = []
+    #     total = self.total
+    #
+    #     for i in self.custody_line_ids:
+    #         description = i.name
+    #         conc = str(i.name or '') + '/' + ' '
+    #         list.append(conc)
+    #         desc = ', '.join(list)
+    #         self.description = desc
+    #         partner_name = i.partner_id.id
+    #
+    #         # Convert amounts based on currency
+    #         amount = i.amount
+    #         curr_amount = 0
+    #         currency_id = False
+    #
+    #         if i.currency_id != self.env.user.company_id.currency_id:
+    #             amount = i.currency_id._convert(i.amount, self.currency_id, self.env.user.company_id, self.request_date)
+    #             curr_amount = i.amount
+    #             currency_id = i.currency_id.id
+    #
+    #         debit_val = {
+    #             'move_id': self.move_id.id,
+    #             'name': description,
+    #             'account_id': i.account_id.id,
+    #             'debit': amount,
+    #             'currency_id': currency_id,
+    #             'partner_id': partner_name if self.custody_line_ids.partner_id else False,
+    #             'amount_currency': curr_amount,
+    #         }
+    #         l.append((0, 0, debit_val))
+    #
+    #     # Convert amounts based on currency
+    #     credit_amount = self.currency_id._convert(self.amount, self.env.user.company_id.currency_id,
+    #                                               self.env.user.company_id, self.request_date)
+    #     currency_id = self.currency_id.id
+    #     credit_curr_amount = self.amount
+    #
+    #     credit_val = {
+    #         'move_id': self.move_id.id,
+    #         'name': desc,
+    #         'account_id': self.account_id.id,
+    #         'credit': credit_amount,
+    #         'currency_id': currency_id,
+    #         'partner_id': False,
+    #         'amount_currency': credit_curr_amount * -1,
+    #     }
+    #     l.append((0, 0, credit_val))
+    #
+    #     vals = {
+    #         'journal_id': self.cash_journal_id.id,
+    #         'date': self.request_date,
+    #         'ref': self.name,
+    #         'line_ids': l,
+    #     }
+    #
+    #     self.move_id = account_move_object.create(vals)
+    #     self.move_id.post()
+    #
+    #     self.state = 'post'
 
 
     @api.model
@@ -544,7 +626,8 @@ class CashVoucher(models.Model):
             desc = ', '.join(list)
             self.description = desc
             partner_name = i.partner_id.id
-        self.state = 'manager'
+        # self.state = 'manager'
+        self.state = 'accountant'
     def confirm_audit(self):
         global desc2, desc, accounts
 
