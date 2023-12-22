@@ -286,7 +286,7 @@ class RequestInbound(models.Model):
             list = []
             curr_amount = 0
             amount = 0
-            currency_id = False
+            currency_id = self.env.user.company_id.currency_id
 
             for i in self.custody_line_ids:
                 description = i.name
@@ -302,7 +302,7 @@ class RequestInbound(models.Model):
 
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
-                    currency_id = False
+                    currency_id = self.env.user.company_id.currency_id
                     curr_amount = 0
                 credit_val = {
 
@@ -321,7 +321,7 @@ class RequestInbound(models.Model):
                     debit_curr_amount = self.amount
             if self.currency_id == self.env.user.company_id.currency_id:
                 debit_amount = self.amount
-                currency_id = False
+                currency_id = self.env.user.company_id.currency_id
                 debit_curr_amount = False
         debit_val = {
                     'move_id': self.move_id.id,
