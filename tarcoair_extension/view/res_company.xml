@@ -1,0 +1,42 @@
+<odoo>
+    <record id="view_company_form_inherit" model="ir.ui.view">
+        <field name="name">res.company.form.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='favicon']" position="after">
+                <field name="is_required_analytic"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_move_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.form.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                 <field name="is_required_analytic" invisible="1"/>
+                <field name="analytic_account_id" attrs="{'required': [('is_required_analytic', '=', True)]}"/>
+            </xpath>
+<!--            <xpath expr="//field[@name='analytic_account_id']" position="attributes">-->
+<!--                <attribute name="attrs">{'required': [('is_required_analytic', '=', True)]}</attribute>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+
+     <record id="view_account_analytic_account_form_inherit" model="ir.ui.view">
+        <field name="name">account.analytic.account.form.inherit</field>
+        <field name="model">account.analytic.account</field>
+        <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='code']" position="after">
+                 <field name="is_required_analytic" invisible="1"/>
+                <field name="analytic_account_id" attrs="{'required': [('is_required_analytic', '=', True)]}"/>
+            </xpath>
+<!--            <xpath expr="//field[@name='analytic_account_id']" position="attributes">-->
+<!--                <attribute name="attrs">{'required': [('is_required_analytic', '=', True)]}</attribute>-->
+<!--            </xpath>-->
+        </field>
+    </record>
+</odoo>

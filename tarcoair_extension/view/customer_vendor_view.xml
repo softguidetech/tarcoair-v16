@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_search_extended" model="ir.ui.view">
+        <field name="name">res.partner.search</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+             <xpath expr="//filter[@name='group_company']" position="after">
+                <filter name="group_tags" string="Tag" context="{'group_by': 'category_id'}"/>
+            </xpath>
+<!--            <xpath expr="//filter[@name='inactive']" position="before">-->
+<!--                <filter string="Tags" name="category_id"/>-->
+<!--                <separator/>-->
+<!--                <group>-->
+<!--                    <filter name="group_category_id" string="Tags" context="{'group_by': 'category_id'}"/>-->
+<!--                </group>-->
+<!--            </xpath>-->
+            <!--            <filter string="Individuals" name="type_person" domain="[('is_company', '=', False)]"/>-->
+            <!--            <filter string="Companies" name="type_company" domain="[('is_company', '=', True)]"/>-->
+            <!--            <separator/>-->
+            <!--            <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>-->
+            <!--            <separator/>-->
+            <!--            <group expand="0" name="group_by" string="Group By">-->
+            <!--                <filter name="salesperson" string="Salesperson" domain="[]" context="{'group_by' : 'user_id'}"/>-->
+            <!--                <filter name="group_company" string="Company" context="{'group_by': 'parent_id'}"/>-->
+            <!--                <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>-->
+            <!--                <filter name="group_category_id" string="Tags" context="{'group_by': 'category_id'}"/>-->
+            <!--            </group>-->
+        </field>
+    </record>
+<!--    <record id="view_partner_tree_inherit" model="ir.ui.view">-->
+<!--        <field name="name">res.partner.tree.inherit</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="inherit_id" ref="base.view_partner_tree"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            <xpath expr="//tree" position="attributes">-->
+<!--                <attribute name="default_group_by" eval="'category_id'"/>-->
+<!--            </xpath>-->
+<!--        </field>-->
+<!--    </record>-->
+
+
+<!--     <record id="view_partner_kanban_extend" model="ir.ui.view">-->
+<!--            <field name="name">res.partner.view.tree</field>-->
+<!--            <field name="model">res.partner</field>-->
+<!--            <field name="inherit_id" ref="base.res_partner_kanban_view"/>-->
+<!--            <field name="mode">primary</field>-->
+<!--            <field name="priority">32</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//kanban" position="attributes">-->
+<!--                    <attribute name="default_group_by">category_id</attribute>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--     </record>-->
+
+
+
+
+
+
+
+    <!--    <record id="account.res_partner_action_customer" model="ir.actions.act_window">-->
+    <!--        <field name="name">Customers</field>-->
+    <!--        <field name="type">ir.actions.act_window</field>-->
+    <!--        <field name="res_model">res.partner</field>-->
+    <!--        <field name="view_mode">kanban,tree,form</field>-->
+    <!--        <field name="context">{'group_by': 'category_id','search_default_customer': 1,'res_partner_search_mode':-->
+    <!--            'customer', 'default_is_company': True, 'default_customer_rank': 1}-->
+    <!--        </field>-->
+    <!--        <field name="help" type="html">-->
+    <!--            <p class="o_view_nocontent_smiling_face">-->
+    <!--                Create a new customer in your address book-->
+    <!--            </p>-->
+    <!--            <p>-->
+    <!--                Odoo helps you easily track all activities related to a customer.-->
+    <!--            </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <!--    <record id="account.res_partner_action_supplier" model="ir.actions.act_window">-->
+    <!--        <field name="name">Vendors</field>-->
+    <!--        <field name="type">ir.actions.act_window</field>-->
+    <!--        <field name="res_model">res.partner</field>-->
+    <!--        <field name="view_mode">kanban,tree,form</field>-->
+    <!--        <field name="context">{'group_by': 'category_id','search_default_supplier': 1,'res_partner_search_mode': 'supplier', 'default_is_company':-->
+    <!--            True, 'default_supplier_rank': 1}-->
+    <!--        </field>-->
+    <!--        <field name="help" type="html">-->
+    <!--            <p class="o_view_nocontent_smiling_face">-->
+    <!--                Create a new supplier in your address book-->
+    <!--            </p>-->
+    <!--            <p>-->
+    <!--                Odoo helps you easily track all activities related to a supplier.-->
+    <!--            </p>-->
+    <!--        </field>-->
+    <!--    </record>-->
+</odoo>
