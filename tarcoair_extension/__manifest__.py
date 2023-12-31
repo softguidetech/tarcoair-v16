@@ -2,9 +2,9 @@
 
 {
     "name": "Tarcoair Extension",
-    "version": "1.6",
+    "version": "1.6.1",
     "depends": [
-        'base', 'account', 'contacts','analytic'
+        'base', 'account', 'contacts','analytic','product'
     ],
     'data': [
         'security/security_view.xml',

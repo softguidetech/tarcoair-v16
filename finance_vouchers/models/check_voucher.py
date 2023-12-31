@@ -81,18 +81,18 @@ class CheckVoucher(models.Model):
 
     user_name = fields.Many2one('res.users', string='User Name',readonly=True, default=_default_employee_get)
     # manager_id = fields.Many2one('res.users','Manager',default=manager_default)
-    request_date = fields.Date('تاريخ التحرير', readonly=True, required=True, default=fields.Date.today())
+    request_date = fields.Date('Request Date', readonly=True, required=True, default=fields.Date.today())
     currency_id = fields.Many2one('res.currency', string='Currency',default=default_currency,required=True)
-    amount = fields.Monetary('المبلغ',required=True, track_visibility='onchange')
+    amount = fields.Monetary('Amount',required=True, track_visibility='onchange')
     sequence = fields.Integer(required=True, default=1,)
-    state = fields.Selection([('draft', 'مسودة'),
-                              ('manager', 'اعتماد المدير'),
-                              ('audit', 'اعتماد المراجعة'),
-                              ('accountant', 'موافقة المحاسب'),
-                              ('done', 'اعتماد الخزينة'),
-                              ('post', 'مرحل'),
+    state = fields.Selection([('draft', 'Draft'),
+                              ('manager', 'Direct manager'),
+                              ('audit', 'Auditing'),
+                              ('accountant', 'Accountant'),
+                              ('done', 'Final Approval'),
+                              ('post', 'Posted'),
 
-                              ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
+                              ('cancel', 'Cancelled')], default='draft', track_visibility='onchange')
     # state = fields.Selection([('draft', 'مسودة'),
     #                           ('manager', 'اعتماد المدير'),
     #                           ('audit', 'اعتماد المراجعة'),
@@ -100,26 +100,26 @@ class CheckVoucher(models.Model):
     #                           ('post', 'مرحل'),
     #
     #                           ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
-    num2wo = fields.Char(readonly=True, string="المبلغ كتابة",compute='_onchange_amount',store=True)
+    num2wo = fields.Char(readonly=True, string="Amount in word",compute='_onchange_amount',store=True)
     check_journal_id = fields.Many2one('account.journal', readonly=True, string='دفتر اليومية',
                                        default=lambda self: self.env['account.journal'].search(
-                                           [('name', '=', 'سند صرف شيك')]))
-    person = fields.Char(string= 'المستفيد', track_visibility='onchange')
-    company_id = fields.Many2one('res.company',string="الشركة",default=default_company)
-    check_date = fields.Date(string='تاريخ الاستحقاق', copy=False, default=fields.Date.today())
-    cheque_number = fields.Char(string='رقم الشيك', copy=False)
+                                           [('name', '=', 'Cheque Request')]))
+    person = fields.Char(string= 'Benefetary', track_visibility='onchange')
+    company_id = fields.Many2one('res.company',string="Active Company", readonly=True, default=lambda self: self.env.company)
+    check_date = fields.Date(string='Cheque Date', copy=False, default=fields.Date.today())
+    cheque_number = fields.Char(string='Cheque Number', copy=False)
     check_count = fields.Integer(compute='_compute_check')
     # Accounting Fields
-    total_amount_ex = fields.Float('الاجمالي',readonly=True)
-    move_id = fields.Many2one('account.move',string='قيد المصروف',readonly=True)
-    description = fields.Char(string='الوصف')
-    cash_journal_id = fields.Many2one('account.journal',string='البنك',domain="[('type','in',['bank'])]")
+    total_amount_ex = fields.Float('Total',readonly=True)
+    move_id = fields.Many2one('account.move',string='Journal Entry Expense',readonly=True)
+    description = fields.Char(string='Description')
+    cash_journal_id = fields.Many2one('account.journal',string='Bank',domain="[('type','in',['bank'])]")
     #employee_name = fields.Many2one('res.partner', string="Employee Name",domain="[('is_employee','=',True)]")
     # account_id = fields.Many2one(related='cash_journal_id.default_debit_account_id', string='الحساب', readonly=1)
-    account_id = fields.Many2one(related='cash_journal_id.default_account_id', string='الحساب', readonly=1)
+    account_id = fields.Many2one(related='cash_journal_id.default_account_id', string='Account')
 
-    total_with_ex = fields.Float('الاجمالي الفرعي',compute='_total_with_ex')
-    total = fields.Float('اجمالي المصروفات',compute='_total_expense')
+    total_with_ex = fields.Float('Subtotal',compute='_total_with_ex')
+    total = fields.Float('Total Expenses',compute='_total_expense')
     x_doc_count = fields.Integer(compute='compute_permits',
                                string="Bills")
     count_je = fields.Integer(compute='_count_je_compute')
@@ -332,10 +332,13 @@ class CheckVoucher(models.Model):
             if i.currency_id != self.env.user.company_id.currency_id:
                 return i.currency_id.id
 
+
     @api.model
     def amount_currency_debit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
+                return i.amount / i.currency_id.rate
+            if i.currency_id == self.env.user.company_id.currency_id:
                 return i.amount
 
 
@@ -343,6 +346,10 @@ class CheckVoucher(models.Model):
     def amount_currency_credit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
+                amount =  i.amount * -1
+                return amount / i.currency_id.rate
+
+            if i.currency_id == self.env.user.company_id.currency_id:
                 return i.amount * -1
     @api.model
     def amount_currency_credit_equal(self):
@@ -362,17 +369,17 @@ class CheckVoucher(models.Model):
         account_move_object = self.env['account.move']
 
         if not self.cash_journal_id and not self.account_id:
-            raise ValidationError(_('يرجي ادخال يومية السداد و الحساب'))
+            raise ValidationError(_('Please insert Pay by or account'))
         if self.amount != self.total:
-            raise ValidationError(_('اجمالي المبلغ لا يساوي اجمالي المصروف'))
+            raise ValidationError(_('Total amount not equal to total expenses'))
         if self.amount == self.total:
 
             l = []
             curr_amount = 0
             amount = 0
-            credit_name =  'شيك رقم' + '  '+str(self.cheque_number)
+            credit_name =  'Cheque No' + '  '+str(self.cheque_number)
             list = []
-            currency_id = self.env.user.company_id.currency_id
+            currency_id = self.env.user.company_id.currency_id.id
             check_obj = self.env['check.followup']
             for i in self.custody_line_ids:
                 description = i.name
@@ -393,7 +400,7 @@ class CheckVoucher(models.Model):
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
                     # currency_id = False
-                    currency_id = self.env.user.company_id.currency_id
+                    currency_id = self.env.user.company_id.currency_id.id
                     curr_amount = 0
                 debit_val = {
                 'move_id': self.move_id.id,
@@ -404,7 +411,7 @@ class CheckVoucher(models.Model):
                 'currency_id': currency_id,
                 'partner_id': partner_name if self.custody_line_ids.partner_id else False,
                 'amount_currency': curr_amount or False,
-                # 'company_id': self.company_id.id or False,
+                'company_id': self.company_id.id or False,
 
             }
                 l.append((0, 0, debit_val))
@@ -418,7 +425,7 @@ class CheckVoucher(models.Model):
                         'partner_id': self.user_name.partner_id.id,
                         'amount_currency': curr_amount * -1 or False,
                         # # 'analytic_account_id': ,
-                        # 'company_id': self.company_id.id or False,
+                        'company_id': self.company_id.id or False,
 
                     }
             l.append((0, 0, credit_val))
@@ -446,22 +453,22 @@ class CheckVoucher(models.Model):
                 'journal_id': self.cash_journal_id.id,
                 'date': self.request_date,
                 'ref': self.name,
-                # 'company_id': ,
+                'company_id': self.company_id.id or False,
                 'line_ids': l,
             }
             self.move_id = account_move_object.create(vals)
-            self.move_id.post()
+            self.move_id.action_post()
 
 
             check_id = check_obj.sudo().create(check_val)
             ###########LOG#############################
             log_obj = self.env['check.log']
-            log_obj.create({'move_description': 'شيك صادر ',
+            log_obj.create({'move_description': 'Outstanding Cheque ',
                             'move_id': self.move_id.id,
                             'move_date': self.request_date,
                             'check_id': check_id.id,
                             })
-
+            self.company_id = self.env.company.id
             self.state = 'post'
 
 
@@ -476,6 +483,8 @@ class CheckVoucher(models.Model):
     def total_debit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
+                return i.amount * i.currency_id.rate
+            if i.currency_id == self.env.user.company_id.currency_id:
                 return i.amount
 
     def amount_debit(self):
@@ -506,7 +515,7 @@ class CheckVoucher(models.Model):
         code = 'check.voucher.code'
 
         if vals.get('name', 'New') == 'New':
-            message = 'سند صرف شيك' + self.env['ir.sequence'].next_by_code(code)
+            message = 'Cheque Out ' + self.env['ir.sequence'].next_by_code(code)
             vals['name'] = message
             # self.message_post(subject='Create CCR', body='This is New CCR Number' + str(message))
         return super(CheckVoucher, self).create(vals)
@@ -546,6 +555,7 @@ class CheckVoucher(models.Model):
             self.description = desc
             partner_name = i.partner_id.id
         # self.state = 'manager'
+        self.company_id = self.env.company.id
         self.state = 'accountant'
     def confirm_audit(self):
         list = []
@@ -569,7 +579,7 @@ class CheckVoucher(models.Model):
             self.description = desc
             partner_name = i.partner_id.id
             if self.amount != self.total:
-                raise ValidationError(_('اجمالي المبلغ لا يساوي اجمالي فئات العملة'))
+                raise ValidationError(_('Total amount not equal currency total'))
             if self.amount == self.total:
                 self.state = 'audit'
 
@@ -582,26 +592,28 @@ class CheckVoucherLine(models.Model):
 
         return self.env.user.id
 
-    name = fields.Char('البيان',required=True)
+    name = fields.Char('naration',required=True)
     doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel5', 'doc_id', 'attach_id6', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
-    analytic_accont_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
-    amount = fields.Float('المبلغ',required=True)
-    cash_request_id = fields.Many2one('check.voucher',string='سند الصرف')
-    account_id = fields.Many2one('account.account',string='الحساب')
+    analytic_account_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
+    amount = fields.Float('Amount',required=True)
+    cash_request_id = fields.Many2one('check.voucher',string='Chas Request')
+    account_id = fields.Many2one('account.account',string='Account')
     #############
 
-    partner_id = fields.Many2one('res.partner', string='الشريك')
-    currency_id = fields.Many2one('res.currency','العملة',compute='_compute_currency')
-    company_id = fields.Many2one('res.company','الشركة',compute='_compute_company')
-    user_id = fields.Many2one('res.users','المستخدم',compute='_compute_user')
+    partner_id = fields.Many2one('res.partner', string='Partner')
+    currency_id = fields.Many2one('res.currency','Currency',compute='_compute_currency')
+    company_id = fields.Many2one('res.company','Company',compute='_compute_company')
+    user_id = fields.Many2one('res.users','User',compute='_compute_user')
     date_clear = fields.Date(string='Clear Date',compute='_compute_date')
     # analytic_id = fields.Many2one('account.analytic.account',compute='_compute_analytic')
     #############
-    state = fields.Selection(string="الحالة", related='cash_request_id.state')
-    user_name = fields.Many2one(string="المستخدم", related='cash_request_id.user_name')
+    state = fields.Selection(string="State", related='cash_request_id.state')
+    user_name = fields.Many2one(string="User", related='cash_request_id.user_name')
     # user_id = fields.Many2one('res.users',default=_default_user)
-    tax_amount = fields.Float('الضريبة')
+    tax_amount = fields.Float('Tax')
+    is_required_analytic = fields.Boolean(string="Is analytic required", related='company_id.is_required_analytic')
+
 
 
     @api.depends('cash_request_id.currency_id')
@@ -610,7 +622,7 @@ class CheckVoucherLine(models.Model):
     ######################3
     @api.onchange('partner_id')
     def _get_partner(self):
-        partner_account = self.env['account.account'].search([('name', '=', 'الدائنون')])
+        partner_account = self.env['account.account'].search([('name', '=', 'Creditor')])
         if self.partner_id:
             self.account_id = partner_account
 

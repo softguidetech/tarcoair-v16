@@ -98,5 +98,26 @@
             <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
+        <record id="checkin_multi_company_rule" model="ir.rule">
+            <field name="name">Multi Company Checkin</field>
+            <field name="model_id" ref="model_check_inbound"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="checkout_multi_company_rule" model="ir.rule">
+            <field name="name">Multi Company Checkout</field>
+            <field name="model_id" ref="model_check_voucher"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="cashin_multi_company_rule" model="ir.rule">
+            <field name="name">Multi Company Cash In</field>
+            <field name="model_id" ref="model_request_inbound"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
     </data>
 </odoo>

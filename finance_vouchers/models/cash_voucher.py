@@ -62,7 +62,8 @@ class CashVoucher(models.Model):
 
 
     def default_company(self):
-        return self.env.user.company_id
+        # return self.env.user.company_id
+        return self.env.company
 
     def default_user_analytic(self):
         return self.env.user
@@ -75,28 +76,28 @@ class CashVoucher(models.Model):
     #     return self.env.user.manager_id
 
     name = fields.Char('Reference', readonly=True, default='New')
-    description = fields.Char(string='الوصف')
-    accounts_ids = fields.Char(string='حساب المصروف')
+    description = fields.Char(string='Description')
+    accounts_ids = fields.Char(string='Expense Account')
 
     user_name = fields.Many2one('res.users', string='User Name', readonly=True, default=_default_employee_get)
     # manager_id = fields.Many2one('res.users','Manager',default=manager_default)
-    pay_type = fields.Boolean(string='تفاصيل الشيك',copy=False)
+    pay_type = fields.Boolean(string='Cheque Details',copy=False)
     x_bill_no = fields.Many2one('account.move',string='Bill No',domain="[('move_type','=','in_invoice')]")
     x_doc_count = fields.Integer(compute='compute_permits',
                                string="Bills")
-    request_date = fields.Date('التاريخ', default=lambda self: fields.Date.today(), track_visibility='onchange')
-    currency_id = fields.Many2one('res.currency', string='العملة', default=default_currency, required=True)
+    request_date = fields.Date('Date', default=lambda self: fields.Date.today(), track_visibility='onchange')
+    currency_id = fields.Many2one('res.currency', string='Currency', default=default_currency, required=True)
     amount = fields.Monetary('المبلغ', required=True, track_visibility='onchange')
     sequence = fields.Integer(required=True, default=1, )
-    state = fields.Selection([('draft', 'مسودة'),
-                              ('manager', 'اعتماد المدير'),
-                              ('audit', 'اعتماد المراجعة'),
-                              ('accountant', 'موافقة المحاسب'),
-                              ('done', 'اعتماد الخزينة'),
-                              ('post', 'مرحل'),
+    state = fields.Selection([('draft', 'Draft'),
+                              ('manager', 'Direct Manager'),
+                              ('audit', 'Auditing'),
+                              ('accountant', 'Accountant'),
+                              ('done', 'Final Approve'),
+                              ('post', 'Posted'),
 
 
-                              ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
+                              ('cancel', 'Cancel')], default='draft', track_visibility='onchange')
     # state = fields.Selection([('draft', 'مسودة'),
     #                           ('manager', 'اعتماد المدير'),
     #                           ('audit', 'اعتماد المراجعة'),
@@ -106,8 +107,8 @@ class CashVoucher(models.Model):
     #
     #                           ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
 
-    company_id = fields.Many2one('res.company', string="الشركة", default=default_company)
-    num2wo = fields.Char(string="المبلغ كتابة", compute='_onchange_amount', store=True)
+    company_id = fields.Many2one('res.company', string="Active Company", readonly=True, default=lambda self: self.env.company)
+    num2wo = fields.Char(string="Amount in word", compute='_onchange_amount', store=True)
     # cash_unit = fields.Boolean(string='فئات العملة', copy=False)
     # unit_500 = fields.Float(string='500 X')
     # unit_tl_500 = fields.Float(compute='_compute_units', readonly=True, string='total 500')
@@ -127,18 +128,21 @@ class CashVoucher(models.Model):
     # total_other_value = fields.Float(string='قيمة فئة أخري')
     # # Accounting Fields
     # total_amount_ex = fields.Float('الاجمالي', readonly=True)
-    move_id = fields.Many2one('account.move', string='قيد اليومية', readonly=True)
+    move_id = fields.Many2one('account.move', string='Journal Entry', readonly=True)
 
-    cash_journal_id = fields.Many2one('account.journal', string='يومية السداد')
+    cash_journal_id = fields.Many2one('account.journal', string='Pay By')
     # employee_name = fields.Many2one('res.partner', string="Employee Name",domain="[('is_employee','=',True)]")
     # account_id = fields.Many2one(related='cash_journal_id.default_credit_account_id', string='الحساب', readonly=1)
-    account_id = fields.Many2one(related='cash_journal_id.default_account_id', string='الحساب', readonly=1)
+    account_id = fields.Many2one(related='cash_journal_id.default_account_id', string='Account', readonly=1)
 
-    total_with_ex = fields.Float('الاجمالي الفرعي', compute='_total_with_ex')
-    total = fields.Float('اجمالي المصروفات', compute='_total_expense')
+    total_with_ex = fields.Float('Subtotal', compute='_total_with_ex')
+    total = fields.Float('Total Expenses', compute='_total_expense')
 
     count_je = fields.Integer(compute='_count_je_compute')
     count_diff = fields.Integer(compute='_count_diff_compute')
+    is_sending_to_related_party = fields.Boolean(string="Is sending to related party")
+    is_transfer = fields.Boolean(string="Is transfer")
+
 
     def _count_je_compute(self):
         for i in self:
@@ -287,25 +291,29 @@ class CashVoucher(models.Model):
     def get_currency(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
-                return i.currency_id.id
+                return i.currency_id
+            elif i.currency_id == self.env.user.company_id.currency_id:
+                return i.currency_id
 
     @api.model
     def amount_currency_debit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
-                return i.amount
+                return i.amount / i.currency_id.rate
 
     @api.model
     def amount_currency_tax_debit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
+                # return i.tax_amount
                 return i.tax_amount
 
     @api.model
     def amount_currency_credit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
-                return i.amount * -1
+                amount =  i.amount * -1
+                return amount / i.currency_id.rate
 
     @api.model
     def amount_currency_credit_equal(self):
@@ -332,9 +340,9 @@ class CashVoucher(models.Model):
         account_move_object = self.env['account.move']
         account_move_object2 = self.env['account.move']
         if not self.cash_journal_id and not self.account_id:
-            raise ValidationError(_('يرجي ادخال يومية السداد و الحساب'))
+            raise ValidationError(_('You have to enter accounts or payed by!!'))
         if self.amount != self.total:
-            raise ValidationError(_('اجمالي المبلغ لا يساوي اجمالي المصروف'))
+            raise ValidationError(_('Total amount not equal total expenses'))
         # if self.cash_unit == True and self.total_units != self.amount and self.total_units != self.total:
         #     raise ValidationError(_('اجمالي الفئات لا يساوي اجمالي المبالغ الاخري'))
         # if self.cash_unit == True and self.total_units == self.amount and self.total_units != self.total:
@@ -347,7 +355,7 @@ class CashVoucher(models.Model):
             curr_amount = 0
             amount = 0
             # currency_id = False
-            currency_id = self.env.user.company_id.currency_id
+            currency_id = self.env.user.company_id.currency_id.id
             total=self.total
             for i in self.custody_line_ids:
                 description = i.name
@@ -364,7 +372,7 @@ class CashVoucher(models.Model):
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
                     # currency_id = False
-                    currency_id = self.env.user.company_id.currency_id
+                    currency_id = self.env.user.company_id.currency_id.id
                     curr_amount = 0
 
 
@@ -377,7 +385,7 @@ class CashVoucher(models.Model):
                     'currency_id': currency_id,
                     'partner_id': partner_name if self.custody_line_ids.partner_id else False,
                     'amount_currency': curr_amount or False,
-                    # 'company_id': self.company_id.id or False,
+                    'company_id': self.company_id.id or False,
 
                 }
                 l.append((0, 0, debit_val))
@@ -398,6 +406,7 @@ class CashVoucher(models.Model):
                     'credit': credit_amount,
                     'currency_id': currency_id,
                     'partner_id': False,
+                    'company_id': self.company_id.id or False,
                     'amount_currency': credit_curr_amount * -1,
             }
             l.append((0, 0, credit_val))
@@ -406,12 +415,14 @@ class CashVoucher(models.Model):
                     'journal_id': self.cash_journal_id.id,
                     'date': self.request_date,
                     'ref': self.name,
-                    # 'company_id': ,
+                    'company_id': self.company_id.id or False,
                     'line_ids': l,
 
             }
             self.move_id = account_move_object.create(vals)
-            self.move_id.post()
+            self.move_id.action_post()
+            self.company_id = self.env.company.id
+            self.state = 'post'
             # reconciled_vals= [{
             #     'name': self.name,
             #     'journal_name': self.cash_journal_id.name,
@@ -442,7 +453,7 @@ class CashVoucher(models.Model):
             #     rec.amount_residual= float(rec.amount_total) - float(rec.amount_residual) - amount2
             #     rec.invoice_payment_state = 'paid'
 
-            self.state = 'post'
+            # self.state = 'post'
 
 
             # ///////////////////////////////////
@@ -581,7 +592,7 @@ class CashVoucher(models.Model):
         code = 'cash.voucher.code'
 
         if vals.get('name', 'New') == 'New':
-            message = 'سند صرف نقدي' + self.env['ir.sequence'].next_by_code(code)
+            message = 'Receipt Voucher' + self.env['ir.sequence'].next_by_code(code)
             vals['name'] = message
             return super(CashVoucher, self).create(vals)
             # self.message_post(subject='Create CCR', body='This is New CCR Number' + str(message))
@@ -627,6 +638,7 @@ class CashVoucher(models.Model):
             self.description = desc
             partner_name = i.partner_id.id
         # self.state = 'manager'
+        self.company_id = self.env.company.id
         self.state = 'accountant'
     def confirm_audit(self):
         global desc2, desc, accounts
@@ -664,7 +676,7 @@ class CashVoucher(models.Model):
             self.description = desc
             partner_name = i.partner_id.id
             if self.amount != self.total:
-                raise ValidationError(_('اجمالي المبلغ لا يساوي اجمالي فئات العملة'))
+                raise ValidationError(_('Total amount not equal currency amount'))
             if self.amount == self.total:
                 self.state = 'audit'
 
@@ -675,26 +687,33 @@ class CashVoucherLine(models.Model):
     def _default_user(self):
         return self.env.user.id
 
-    name = fields.Char('البيان', required=True)
-    doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel4', 'doc_id', 'attach_id5', string="المرفق",
+    name = fields.Char('Naration', required=True)
+    doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel4', 'doc_id', 'attach_id5', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
-    analytic_accont_id = fields.Many2one('account.analytic.account',string='الحساب التحليلي', track_visibility='onchange')
-    amount = fields.Float('المبلغ', required=True)
-    cash_request_id = fields.Many2one('cash.voucher', string='سند الصرف')
-    account_id = fields.Many2one('account.account', string='الحساب')
+    # analytic_accont_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
+    amount = fields.Float('Amount', required=True)
+    cash_request_id = fields.Many2one('cash.voucher', string='Cash request')
+    account_id = fields.Many2one('account.account', string='Account')
     #############
-    currency_id = fields.Many2one('res.currency', 'العملة', compute='_compute_currency')
-    company_id = fields.Many2one('res.company', 'الشركة', compute='_compute_company')
-    user_id = fields.Many2one('res.users', 'المستخدم', compute='_compute_user')
+    currency_id = fields.Many2one('res.currency', 'Currency', compute='_compute_currency')
+    company_id = fields.Many2one('res.company', 'Company', compute='_compute_company')
+    user_id = fields.Many2one('res.users', 'User', compute='_compute_user')
     date_clear = fields.Date(string='Clear Date', compute='_compute_date')
     # analytic_id = fields.Many2one('account.analytic.account',compute='_compute_analytic')
     #############
-    state = fields.Selection(string="الحالة", related='cash_request_id.state')
-    user_name = fields.Many2one(string="المستخدم", related='cash_request_id.user_name')
-    partner_id = fields.Many2one('res.partner', string='الشريك')
+    state = fields.Selection(string="State", related='cash_request_id.state')
+    user_name = fields.Many2one(string="User", related='cash_request_id.user_name')
+    partner_id = fields.Many2one('res.partner', string='Partner')
+    analytic_accont_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
+
 
     # user_id = fields.Many2one('res.users',default=_default_user)
     # tax_amount = fields.Float('الضريبة')
+
+    is_sending_to_related_party = fields.Boolean(string="Is sending to related party", related='cash_request_id.is_sending_to_related_party')
+    is_transfer = fields.Boolean(string="Is transfer", related='cash_request_id.is_transfer')
+    is_required_analytic = fields.Boolean(string="Is analytic required", related='company_id.is_required_analytic')
+
 
     @api.depends('cash_request_id.currency_id')
     def _compute_currency(self):
@@ -702,9 +721,27 @@ class CashVoucherLine(models.Model):
 
     @api.onchange('partner_id')
     def _get_partner(self):
-        partner_account = self.partner_id.property_account_payable_id.id
+        partner_account = self.partner_id.property_account_receivable_id.id
         if self.partner_id:
             self.account_id = partner_account
+
+    @api.onchange('is_sending_to_related_party')
+    def onchange_sending_to_related_party(self):
+        domain = {}
+        if self.is_sending_to_related_party:
+            domain = {'partner_id': [('is_related_party', '=', True)]}
+        return {'domain': domain}
+
+    # @api.onchange('is_sending_to_related_party')
+    # def onchange_sending_to_related_party(self):
+    #     if self.is_sending_to_related_party:
+    #         partners = self.env['res.partner'].search(
+    #             [('is_related_party', '=', True)])
+    #         partners_list = []
+    #         for partner in partners:
+    #             partners_list.append(partner.id)
+    #         domain = {'partner_id': [('id', 'in', partners_list)]}
+    #         return {'domain': domain}
 
     ######################3
 

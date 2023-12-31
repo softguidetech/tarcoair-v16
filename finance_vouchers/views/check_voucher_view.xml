@@ -49,19 +49,19 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="confirm_manager" string="إلى المحاسب" type="object"
+                        <button name="confirm_manager" string="To Accountant" type="object"
                                 class="oe_highlight" states="draft" groups="base.group_user"/>
-                        <button name="confirm_cashier" string="الي المراجعة الداخلية" type="object"
+                        <button name="confirm_cashier" string="To Auditor" type="object"
                                 class="oe_highlight" states="manager" groups="finance_vouchers.group_cash_voucher_cs"/>
-                        <button name="unlink" string="الغاء" type="object"
+                        <button name="unlink" string="Cancel" type="object"
                                 states="post" groups="account.group_account_manager"/>
-<!--                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>-->
-                        <button name="confirm_audit" string="إلي الخزينة" type="object"
+                        <!--                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>-->
+                        <button name="confirm_audit" string="To Final Approval" type="object"
                                 class="oe_highlight" states="audit" groups="finance_vouchers.group_cash_voucher_cs"/>
-                        <button name="confirm_post" string="ترحيل" type="object"
+                        <button name="confirm_post" string="Post" type="object"
                                 class="oe_highlight" states="accountant" groups="account.group_account_manager"/>
-<!--                        <button name="confirm_post" string="ترحيل" type="object"-->
-<!--                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>-->
+                        <!--                        <button name="confirm_post" string="ترحيل" type="object"-->
+                        <!--                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>-->
                         <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>
                     </header>
                     <sheet>
@@ -95,11 +95,12 @@
                         <group>
                             <field name="user_name"/>
                         </group>
-                        <group col="6" colspan="6" string="تفاصيل سند الصرف">
+                        <group col="6" colspan="6" string="Cheque Voucher Info">
                             <field name="request_date" readonly="1"/>
                             <field name="check_date"/>
-                            <field name="cash_journal_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],
-                            'invisible': [('state','in',['draft','manager','audit'])]}"/>
+                            <field name="cash_journal_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'accountant')],'invisible': [('state','in',['draft','manager','audit'])]}"/>
+<!--                            <field name="cash_journal_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],-->
+<!--                            'invisible': [('state','in',['draft','manager','audit'])]}"/>-->
                             <field name="person"/>
                             <field name="amount"/>
                             <field name="num2wo" readonly="1"/>
@@ -115,7 +116,10 @@
                                 <field name="custody_line_ids">
                                     <tree editable="bottom">
                                         <field name="state" invisible="1"/>
+                                        <field name="is_required_analytic" invisible="1"/>
                                         <field name="account_id"/>
+                                        <field name="analytic_account_id"
+                                               attrs="{'required': [('is_required_analytic', '=', True)]}"/>
                                         <field name="partner_id"/>
                                         <field name="name"/>
                                         <field name="currency_id"/>
@@ -136,8 +140,9 @@
                             <page string="Accounting Details">
                                 <!--</group>-->
                                 <group col="4" colspan="4">
-                                    <field name="account_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],
-                             'invisible': [('state','in',['draft','manager','audit'])]}"/>
+                                    <field name="account_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'accountant')],'invisible': [('state','in',['draft','manager','audit'])]}"/>
+<!--                                    <field name="account_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],-->
+<!--                             'invisible': [('state','in',['draft','manager','audit'])]}"/>-->
 
                                     <field name="move_id" readonly="1"/>
                                 </group>
@@ -173,31 +178,6 @@
             <field name="context">{'search_default_my_request': 1}</field>
         </record>
 
-        <!--<record id="custody_clear_request_dm" model="ir.actions.act_window">-->
-        <!--<field name="name">Reconcile Direct Manager Approval</field>-->
-        <!--<field name="res_model">custody.clear.request</field>-->
-        <!--&lt;!&ndash;            <field name="view_type">form</field>&ndash;&gt;-->
-        <!--<field name="view_mode">tree,form,kanban</field>-->
-        <!--<field name="domain">[('state', '=', 'dm')]</field>-->
-        <!--<field name="context">{'search_default_today': 1}</field>-->
-
-        <!--</record>-->
-
-        <!--<record id="custody_clear_request_am" model="ir.actions.act_window">-->
-        <!--<field name="name">Reconcile Account Manager Approval</field>-->
-        <!--<field name="res_model">custody.clear.request</field>-->
-        <!--&lt;!&ndash;            <field name="view_type">form</field>&ndash;&gt;-->
-        <!--<field name="view_mode">tree,form,kanban</field>-->
-        <!--<field name="domain">[('state', '=', 'am')]</field>-->
-        <!--</record>-->
-
-        <!--<record id="custody_clear_request_fm" model="ir.actions.act_window">-->
-        <!--<field name="name">Reconcile Finance Manager Approval</field>-->
-        <!--<field name="res_model">custody.clear.request</field>-->
-        <!--&lt;!&ndash;            <field name="view_type">form</field>&ndash;&gt;-->
-        <!--<field name="view_mode">tree,form,kanban</field>-->
-        <!--<field name="domain">[('state', '=', 'fm')]</field>-->
-        <!--</record>-->
 
         <record id="check_voucher_post" model="ir.actions.act_window">
             <field name="name">Vouchers Posted</field>
@@ -209,40 +189,6 @@
 
         </record>
 
-        <!--<record id="custody_report_action" model="ir.actions.act_window">-->
-        <!--<field name="name">Petty cash Report</field>-->
-        <!--<field name="res_model">pettycash.report</field>-->
-        <!--&lt;!&ndash;            <field name="view_type">form</field>&ndash;&gt;-->
-        <!--<field name="view_mode">tree</field>-->
-        <!--&lt;!&ndash;<field name="domain">[('state', '=', 'post')]</field>&ndash;&gt;-->
-        <!--&lt;!&ndash;<field name="context">{'search_default_my_request': 1}</field>&ndash;&gt;-->
-        <!--</record>-->
-
-        <!--<record id="report_tree_pettycash" model="ir.ui.view">-->
-        <!--<field name="name">pettycash.report.view.tree</field>-->
-        <!--<field name="model">pettycash.report</field>-->
-        <!--<field name="arch" type="xml">-->
-        <!--<tree  create="false" edit="false" delete="false">-->
-        <!--<field name="date"/>-->
-        <!--&lt;!&ndash;<field name="request_date"/>&ndash;&gt;-->
-        <!--<field name="currency_id"/>-->
-        <!--<field name="analytic_id"/>-->
-        <!--<field name="company_id"/>-->
-        <!--<field name="user_id"/>-->
-        <!--<field name="amount"/>-->
-        <!--</tree>-->
-        <!--</field>-->
-        <!--</record>-->
-
-        <!--petty cash lines-->
-        <!--<record id="expense_lines_actions" model="ir.actions.act_window">-->
-        <!--<field name="name">Expenses Line</field>-->
-        <!--<field name="res_model">custody.clear.line</field>-->
-        <!--<field name="view_type">form</field>-->
-        <!--<field name="view_mode">tree</field>-->
-        <!--<field name="domain">[('state', '=', 'post')]</field>-->
-        <!--&lt;!&ndash;<field name="context">{'search_default_my_request': 1}</field>&ndash;&gt;-->
-        <!--</record>-->
 
         <record model="ir.ui.view" id="petty_cash_reconcile_kanban_view">
             <field name="name">Cash Vouchers Kanban</field>
@@ -284,27 +230,9 @@
             </field>
         </record>
 
-        <!--<record id="custody_request)inherit_form" model="ir.ui.view">-->
-        <!--<field name="name">custody.request.form.inherit</field>-->
-        <!--<field name="model">custody.request</field>-->
-        <!--<field name="inherit_id" ref="custody_request.custody_request_form"/>-->
-        <!--<field name="arch" type="xml">-->
-        <!--<xpath expr="//button[@name='action_journal_entry']" position="before">-->
-        <!--<button type="object" name="action_reconcile_request" class="oe_stat_button"-->
-        <!--icon="fa-check-square">-->
-        <!--<field name="clear_num" widget="statinfo" string="Reconcile"/>-->
-        <!--</button>-->
-        <!--</xpath>-->
 
-        <!--</field>-->
-        <!--</record>-->
-
-        <!--<menuitem id="custody_clear_request_root" name="Reconcile Request" groups="base.group_user"/>-->
-
-        <menuitem id="check_vouchers_root_ch1_ch1" name="Check Out" parent="cash_vouchers_ch1"
+        <menuitem id="check_vouchers_root_ch1_ch1" name="Check Out" parent="cash_vouchers_ch2"
                   sequence="1" action="check_request_ac"/>
 
-        <!--<menuitem id="report_root" name="Report" parent="custody_request.custody_request_root"-->
-        <!--sequence="3" groups="base.group_user" action="custody_report_action"/>-->
     </data>
 </odoo>

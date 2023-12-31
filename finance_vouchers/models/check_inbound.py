@@ -45,43 +45,43 @@ class CheckInbound(models.Model):
     #     return self.env.user.manager_id
 
     name = fields.Char('Reference',readonly=True,default='New')
-    electronig = fields.Boolean(string='تحويل الكتروني', copy=False)
+    electronig = fields.Boolean(string='Bank Transfer', copy=False)
     user_name = fields.Many2one('res.users', string='User Name',readonly=True, default=_default_employee_get)
     # manager_id = fields.Many2one('res.users','Manager',default=manager_default)
-    request_date = fields.Date('تاريخ التحرير', readonly=True, required=True, default=fields.Date.today())
+    request_date = fields.Date('Request Date', readonly=True, required=True, default=fields.Date.today())
     currency_id = fields.Many2one('res.currency', string='Currency',default=default_currency,required=True)
-    amount = fields.Monetary('المبلغ',required=True, track_visibility='onchange')
+    amount = fields.Monetary('Amount',required=True, track_visibility='onchange')
     sequence = fields.Integer(required=True, default=1,)
-    state = fields.Selection([('draft','مسودة'),
-                              ('manager', 'اعتماد المدير'),
-                              ('accountant', 'موافقة المحاسب'),
-                              ('done', 'تم الاستلام'),
-                              ('post', 'مرحل'),
-                              ('cancel','ملغي')],default='draft',track_visibility='onchange')
+    state = fields.Selection([('draft','Draft'),
+                              ('manager', 'Direct Manager'),
+                              ('accountant', 'Accountant'),
+                              ('done', 'Final Approval'),
+                              ('post', 'Post'),
+                              ('cancel','Canceled')],default='draft',track_visibility='onchange')
     # state = fields.Selection([('draft','مسودة'),
     #                           ('post','مرحل'),
     #                           ('manager', 'اعتماد المدير'),
     #                           ('done', 'تم الاستلام'),
     #                           ('cancel','ملغي')],default='draft',track_visibility='onchange')
-    num2wo = fields.Char(readonly=True, string="المبلغ كتابة",compute='_onchange_amount',store=True)
+    num2wo = fields.Char(readonly=True, string="Amount in word",compute='_onchange_amount',store=True)
     check_journal_id = fields.Many2one('account.journal', readonly=True, string='دفتر اليومية',
                                       default=lambda self: self.env['account.journal'].search(
-                                          [('name', '=', 'سند قبض شيك')]))
-    person = fields.Char(string= 'المستفيد', track_visibility='onchange')
-    company_id = fields.Many2one('res.company',string="الشركة",default=default_company)
-    check_date = fields.Date(string='تاريخ الاستحقاق', copy=False, default=fields.Date.today())
-    cheque_number = fields.Char(string='رقم الشيك/العملية', copy=False)
+                                          [('name', '=', 'Cheque Payment')]))
+    person = fields.Char(string= 'Benefetary', track_visibility='onchange')
+    company_id = fields.Many2one('res.company',string="Active Company", readonly=True, default=lambda self: self.env.company)
+    check_date = fields.Date(string='Cheque Date', copy=False, default=fields.Date.today())
+    cheque_number = fields.Char(string='Cheque Number / Ref', copy=False)
     check_count = fields.Integer(compute='_compute_check')
     # Accounting Fields
-    total_amount_ex = fields.Float('الاجمالي',readonly=True)
-    move_id = fields.Many2one('account.move',string='قيد المصروف',readonly=True)
-    description = fields.Char(string='الوصف')
-    cash_journal_id = fields.Many2one('account.journal',string='البنك',domain="[('type','in',['bank'])]")
+    total_amount_ex = fields.Float('Total',readonly=True)
+    move_id = fields.Many2one('account.move',string='Journal Entry Expense',readonly=True)
+    description = fields.Char(string='Description')
+    cash_journal_id = fields.Many2one('account.journal',string='Bank',domain="[('type','in',['bank'])]")
     #employee_name = fields.Many2one('res.partner', string="Employee Name",domain="[('is_employee','=',True)]")
-    account_id = fields.Many2one(related='cash_journal_id.in_account', string='الحساب', readonly=1)
+    account_id = fields.Many2one(related='cash_journal_id.in_account', string='Account', readonly=1)
 
-    total_with_ex = fields.Float('الاجمالي الفرعي',compute='_total_with_ex')
-    total = fields.Float('اجمالي المصروفات',compute='_total_expense')
+    total_with_ex = fields.Float('Subtotal',compute='_total_with_ex')
+    total = fields.Float('Total Expenses',compute='_total_expense')
 
     count_je = fields.Integer(compute='_count_je_compute')
     count_diff = fields.Integer(compute='_count_diff_compute')
@@ -205,14 +205,14 @@ class CheckInbound(models.Model):
         for i in self.custody_line_ids:
             if self.amount > self.total_amount_ex:
                 if i.currency_id != self.env.user.company_id.currency_id:
-                    return i.amount * i.currency_id.rate
+                    return i.amount / i.currency_id.rate
                 if i.currency_id == self.env.user.company_id.currency_id:
                     return i.amount
 
 
             if self.amount == self.total_amount_ex:
                 if i.currency_id != self.env.user.company_id.currency_id:
-                    return i.amount * i.currency_id.rate
+                    return i.amount / i.currency_id.rate
                 if i.currency_id == self.env.user.company_id.currency_id:
                     return i.amount
 
@@ -227,6 +227,8 @@ class CheckInbound(models.Model):
     def amount_currency_debit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
+                return i.amount / i.currency_id.rate
+            if i.currency_id == self.env.user.company_id.currency_id:
                 return i.amount
     # @api.model
     # def amount_currency_tax_debit(self):
@@ -238,7 +240,10 @@ class CheckInbound(models.Model):
     def amount_currency_credit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
-                return i.amount * -1
+                amount = i.amount * -1
+                return amount / i.currency_id.rate
+            if i.currency_id == self.env.user.company_id.currency_id:
+                return i.amount
     @api.model
     def amount_currency_credit_equal(self):
         for i in self.custody_line_ids:
@@ -257,19 +262,19 @@ class CheckInbound(models.Model):
         account_move_object = self.env['account.move']
 
         if not self.cash_journal_id and not self.account_id:
-            raise ValidationError(_('يرجي ادخال يومية السداد و الحساب'))
+            raise ValidationError(_('Please enter account or pay by !!'))
         if self.amount != self.total:
-            raise ValidationError(_('اجمالي المبلغ لا يساوي اجمالي المصروف'))
+            raise ValidationError(_('Total amount not equal to expense total'))
 
         if self.amount == self.total and self.electronig==False:
 
             l = []
             curr_amount = 0
             amount = 0
-            credit_name =  'شيك رقم' + '  '+self.cheque_number
+            credit_name =  'Cheque Number' + '  '+ str(self.cheque_number)
             list = []
             # currency_id = False
-            currency_id = self.env.user.company_id.currency_id
+            currency_id = self.env.user.company_id.currency_id.id
             check_obj = self.env['check.followup']
             if self.electronig == True:
                 # self.account_id = self.cash_journal_id.default_debit_account_id
@@ -295,7 +300,7 @@ class CheckInbound(models.Model):
 
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
-                    currency_id = self.env.user.company_id.currency_id
+                    currency_id = self.env.user.company_id.currency_id.id
                     curr_amount = 0
                 credit_val = {
 
@@ -303,11 +308,12 @@ class CheckInbound(models.Model):
                     'name': credit_name,
                     'account_id': i.account_id.id,
                     'credit': amount,
+                    # 'analytic_account_id': i.analytic_accont_id.id or False,
                     'currency_id': currency_id,
                     'partner_id': partner_name if self.custody_line_ids.partner_id else self.user_name.partner_id.id,
                     'amount_currency': curr_amount * -1 or False,
                     # # 'analytic_account_id': ,
-                    # 'company_id': self.company_id.id or False,
+                    'company_id': self.company_id.id or False,
 
                 }
                 l.append((0, 0, credit_val))
@@ -321,7 +327,7 @@ class CheckInbound(models.Model):
                 'currency_id': currency_id,
                 'partner_id': self.user_name.partner_id.id,
                 'amount_currency': curr_amount or False,
-                # 'company_id': self.company_id.id or False,
+                'company_id': self.company_id.id or False,
 
             }
             l.append((0, 0, debit_val))
@@ -331,11 +337,11 @@ class CheckInbound(models.Model):
                 'journal_id': self.cash_journal_id.id,
                 'date': self.request_date,
                 'ref': self.name,
-                # 'company_id': ,
+                'company_id': self.company_id.id or False,
                 'line_ids': l,
             }
             self.move_id = account_move_object.create(vals_2)
-            self.move_id.post()
+            self.move_id.action_post()
             self.state = 'post'
             check_val = {
                         'check_created': self.request_date,
@@ -362,7 +368,7 @@ class CheckInbound(models.Model):
             check_id = check_obj.sudo().create(check_val)
         ###########LOG#############################
             log_obj = self.env['check.log']
-            log_obj.create({'move_description': 'شيك وارد ',
+            log_obj.create({'move_description': 'Cheque In ',
                             'move_id': self.move_id.id,
                             'move_date': self.request_date,
                             'check_id': check_id.id,
@@ -375,10 +381,10 @@ class CheckInbound(models.Model):
             l = []
             curr_amount = 0
             amount = 0
-            credit_name = 'تحويل بنك بعملية رقم' + '  ' + self.cheque_number
+            credit_name = 'Bank transfer By Ref' + '  ' + self.cheque_number
             list = []
             # currency_id = False
-            currency_id = self.env.user.company_id.currency_id
+            currency_id = self.env.user.company_id.currency_id.id
 
             if self.electronig == True:
                 self.account_id = self.cash_journal_id.default_account_id
@@ -402,7 +408,7 @@ class CheckInbound(models.Model):
 
                 if i.currency_id == self.env.user.company_id.currency_id:
                     amount = i.amount
-                    currency_id = self.env.user.company_id.currency_id
+                    currency_id = self.env.user.company_id.currency_id.id
                     # currency_id = False
                     curr_amount = 0
 
@@ -412,11 +418,12 @@ class CheckInbound(models.Model):
                     'name': credit_name,
                     'account_id': i.account_id.id,
                     'credit': amount,
+                    # 'analytic_account_id': i.analytic_accont_id.id or False,
                     'currency_id': currency_id,
                     'partner_id': partner_name if self.custody_line_ids.partner_id else self.user_name.partner_id.id,
                     'amount_currency': self.amount_currency_credit_equal() or False,
                     # # 'analytic_account_id': ,
-                    # 'company_id': self.company_id.id or False,
+                    'company_id': self.company_id.id or False,
 
                 }
                 l.append((0, 0, credit_val))
@@ -431,7 +438,7 @@ class CheckInbound(models.Model):
                     'currency_id': currency_id,
                     'partner_id': self.user_name.partner_id.id,
                     'amount_currency': curr_amount or False,
-                    # 'company_id': self.company_id.id or False,
+                    'company_id': self.company_id.id or False,
 
                 }
             l.append((0, 0, debit_val))
@@ -442,11 +449,12 @@ class CheckInbound(models.Model):
                     'journal_id': self.cash_journal_id.id,
                     'date': self.request_date,
                     'ref': self.name,
-                    # 'company_id': ,
+                    'company_id': self.company_id.id or False,
                     'line_ids': l,
                 }
             self.move_id = account_move_object.create(vals_2)
-            self.move_id.post()
+            self.move_id.action_post()
+            self.company_id = self.env.company.id
             self.state = 'post'
 
 
@@ -490,7 +498,7 @@ class CheckInbound(models.Model):
         code = 'check.inbound.code'
 
         if vals.get('name', 'New') == 'New':
-            message = 'سند قبض شيك' + self.env['ir.sequence'].next_by_code(code)
+            message = 'Receipt Voucher Cheque' + self.env['ir.sequence'].next_by_code(code)
             vals['name'] = message
             # self.message_post(subject='Create CCR', body='This is New CCR Number' + str(message))
         return super(CheckInbound, self).create(vals)
@@ -540,6 +548,7 @@ class CheckInbound(models.Model):
             desc = ', '.join(list)
             self.description = desc
             partner_name = i.partner_id.id
+        self.company_id = self.env.company.id
         self.state = 'accountant'
 
 class CheckInboundLine(models.Model):
@@ -551,25 +560,26 @@ class CheckInboundLine(models.Model):
 
         return self.env.user.id
 
-    name = fields.Char('البيان',required=True)
+    name = fields.Char('Naration',required=True)
     doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel9', 'doc_id', 'attach_id10', string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
-    analytic_accont_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
-    amount = fields.Float('المبلغ',required=True)
-    cash_request_id = fields.Many2one('check.inbound',string='سند الصرف')
-    account_id = fields.Many2one('account.account',string='الحساب')
+    analytic_account_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
+    amount = fields.Float('Amount',required=True)
+    cash_request_id = fields.Many2one('check.inbound',string='Expense ref')
+    account_id = fields.Many2one('account.account',string='Account')
     #############
-    partner_id = fields.Many2one('res.partner', string='الشريك')
-    currency_id = fields.Many2one('res.currency','العملة',compute='_compute_currency')
-    company_id = fields.Many2one('res.company','الشركة',compute='_compute_company')
-    user_id = fields.Many2one('res.users','المستخدم',compute='_compute_user')
+    partner_id = fields.Many2one('res.partner', string='Partner')
+    currency_id = fields.Many2one('res.currency','Currency',compute='_compute_currency')
+    company_id = fields.Many2one('res.company','Company',compute='_compute_company')
+    user_id = fields.Many2one('res.users','User',compute='_compute_user')
     date_clear = fields.Date(string='Clear Date',compute='_compute_date')
     # analytic_id = fields.Many2one('account.analytic.account',compute='_compute_analytic')
     #############
-    state = fields.Selection(string="الحالة", related='cash_request_id.state')
-    user_name = fields.Many2one(string="المستخدم", related='cash_request_id.user_name')
+    state = fields.Selection(string="State", related='cash_request_id.state')
+    user_name = fields.Many2one(string="User", related='cash_request_id.user_name')
     # user_id = fields.Many2one('res.users',default=_default_user)
-    tax_amount = fields.Float('الضريبة')
+    tax_amount = fields.Float('Tax')
+    is_required_analytic = fields.Boolean(string="Is analytic required", related='company_id.is_required_analytic')
 
 
     @api.depends('cash_request_id.currency_id')

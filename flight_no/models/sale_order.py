@@ -8,20 +8,34 @@ class SaleOrder(models.Model):
      _inherit = 'sale.order'
 
      def action_confirm(self):
-
           res = super(SaleOrder, self).action_confirm()
 
           for rec in self:
-
-               for pick_rec in rec.picking_ids:
-
-                    pick_rec.write({'root_id': rec.root_id.id
-               })
-               pick_rec.write({'flight_no': rec.flight_no
-
-                               })
+               if rec.picking_ids:
+                    for pick_rec in rec.picking_ids:
+                         pick_rec.write({
+                              'root_id': rec.root_id.id,
+                              'flight_no': rec.flight_no,
+                         })
 
           return res
+
+
+     # def action_confirm(self):
+     #
+     #      res = super(SaleOrder, self).action_confirm()
+     #
+     #      for rec in self:
+     #
+     #           for pick_rec in rec.picking_ids:
+     #
+     #                pick_rec.write({'root_id': rec.root_id.id
+     #           })
+     #           pick_rec.write({'flight_no': rec.flight_no
+     #
+     #                           })
+     #
+     #      return res
 
 
 

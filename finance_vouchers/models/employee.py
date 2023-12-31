@@ -7,5 +7,6 @@ from odoo.exceptions import ValidationError
 class PartnerDirectoryInherit(models.Model):
     _inherit = 'res.partner'
 
-    custody_account_id = fields.Many2one('account.account',string='Custody Account')
-    is_employee = fields.Boolean(string='Is Employee',default=False)
+    # custody_account_id = fields.Many2one('account.account',string='Custody Account')
+    # is_employee = fields.Boolean(string='Is Employee',default=False)
+    is_related_party = fields.Boolean(related='category_id.is_related_party', readonly=True, string="Is related Party")

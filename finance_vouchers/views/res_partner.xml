@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="related_partner_form_inherit">
+            <field name="name">Related Partner Form Inherit View</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+                        <field name="is_related_party" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

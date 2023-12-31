@@ -1,8 +1,19 @@
 from odoo import models, fields, api, _
+from odoo.exceptions import AccessError
 
 
-class Partner(models.Model):
+
+class ResPartner(models.Model):
     _inherit = "res.partner"
+
+    @api.model
+    def create(self, vals):
+        user = self.env.user
+        if user.has_group('tarcoair_extension.group_partner_creation'):
+            vals['company_id'] = user.company_id.id
+            return super(ResPartner, self).create(vals)
+        else:
+            raise AccessError(_("You do not have permission to create partners. Please contact your administrator."))
 
     @api.onchange('category_id')
     def _onchange_category_ids(self):
