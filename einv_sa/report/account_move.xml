@@ -58,21 +58,27 @@
                     </div>
                 </div>
 
-                <!--                <div class="col-3">-->
+<!--                <div class="col-3">-->
 
-                <!--                    <img t-att-src="'/report/barcode/?type=%s&amp;width=%s&amp;height=%s&amp;value=Seller : %s;Vat_Number : %s;date : %s;Total_Vat : %s;Total_Amount : %s'%('QR', 130, 130,doc.company_id.name,doc.company_id.vat,doc.invoice_date,doc.amount_tax_signed,doc.amount_total)"-->
-                <!--                         class="float-right my-1"/>-->
+<!--                    <img t-att-src="'/report/barcode/?type=%s&amp;width=%s&amp;height=%s&amp;value=Seller : %s;Vat_Number : %s;date : %s;Total_Vat : %s;Total_Amount : %s'%('QR', 130, 130,doc.company_id.name,doc.company_id.vat,doc.invoice_date,doc.amount_tax_signed,doc.amount_total)"-->
+<!--                         class="float-right my-1"/>-->
+<!--&lt;!&ndash;                    <span t-field="doc.company_id.name"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <span t-field="doc.company_id.vat"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <span t-field="doc.invoice_date"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <span t-field="doc.amount_tax_signed"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <span t-field="doc.amount_total"></span>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <span t-field="doc.einv_sa_qr_code_str"></span>&ndash;&gt;-->
 
-                <!--                </div>-->
-                                <div class="col-3" >
-                <!--                    <span t-esc="doc.einv_sa_qr_code_str"></span>-->
-                                    <img t-if="doc.einv_sa_qr_code_str"
-                                         style="display:block;"
-                                         t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', doc.einv_sa_qr_code_str, 130, 130)"/>
-                <!--                      <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', doc.einv_sa_qr_code_str, 130, 130)"   class="float-right my-1"/>-->
+<!--                </div>-->
+                <div class="col-3">
+                    <!--                    <span t-esc="doc.einv_sa_qr_code_str"></span>-->
+                    <img t-if="doc.einv_sa_qr_code_str"
+                         style="display:block;"
+                         t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', doc.einv_sa_qr_code_str, 130, 130)"/>
+                    <!--                      <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', doc.einv_sa_qr_code_str, 130, 130)"   class="float-right my-1"/>-->
 
 
-                                </div>
+                </div>
             </div>
             <div class="oe_structure"/>
         </template>
@@ -296,7 +302,7 @@
         <template id="einv_sa.inv_total">
             <div style="page-break-inside: avoid;">
                 <div class="row p-1 mt-1 bg-light">
-                    <div class="col-4" >
+                    <div class="col-4">
                         <Strong>Total Amount:</Strong>
                     </div>
                     <div class="col-8 text-right">
@@ -304,7 +310,7 @@
                     </div>
                 </div>
                 <div class="row">
-<!--                    <div class="col-2"></div>-->
+                    <!--                    <div class="col-2"></div>-->
                     <div class="col-12">
                         <div class="row border border-top-0">
                             <div class="col-4">Total (Excluding VAT)</div>

@@ -1,8 +1,9 @@
 from odoo import fields, models, api, tools, _
-from datetime import datetime, timedelta
+from datetime import date
 from odoo.exceptions import ValidationError
 import json
 from odoo.tools import float_is_zero, float_compare, safe_eval, date_utils, email_split, email_escape_char, email_re
+
 
 # from odoo import amount_to_text
 
@@ -56,10 +57,9 @@ class CashVoucher(models.Model):
                 'account_id': i.partner_id.property_account_payable_id.id,
                 'partner_id': i.partner_id.id,
                 'cash_request_id': self.id,
-                'name':'سداد فاتورة',
+                'name': 'سداد فاتورة',
                 'amount': float(i.amount_total)
             })
-
 
     def default_company(self):
         # return self.env.user.company_id
@@ -81,10 +81,10 @@ class CashVoucher(models.Model):
 
     user_name = fields.Many2one('res.users', string='User Name', readonly=True, default=_default_employee_get)
     # manager_id = fields.Many2one('res.users','Manager',default=manager_default)
-    pay_type = fields.Boolean(string='Cheque Details',copy=False)
-    x_bill_no = fields.Many2one('account.move',string='Bill No',domain="[('move_type','=','in_invoice')]")
+    pay_type = fields.Boolean(string='Cheque Details', copy=False)
+    x_bill_no = fields.Many2one('account.move', string='Bill No', domain="[('move_type','=','in_invoice')]")
     x_doc_count = fields.Integer(compute='compute_permits',
-                               string="Bills")
+                                 string="Bills")
     request_date = fields.Date('Date', default=lambda self: fields.Date.today(), track_visibility='onchange')
     currency_id = fields.Many2one('res.currency', string='Currency', default=default_currency, required=True)
     amount = fields.Monetary('المبلغ', required=True, track_visibility='onchange')
@@ -96,7 +96,6 @@ class CashVoucher(models.Model):
                               ('done', 'Final Approve'),
                               ('post', 'Posted'),
 
-
                               ('cancel', 'Cancel')], default='draft', track_visibility='onchange')
     # state = fields.Selection([('draft', 'مسودة'),
     #                           ('manager', 'اعتماد المدير'),
@@ -107,7 +106,8 @@ class CashVoucher(models.Model):
     #
     #                           ('cancel', 'ملغي')], default='draft', track_visibility='onchange')
 
-    company_id = fields.Many2one('res.company', string="Active Company", readonly=True, default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string="Active Company", readonly=True,
+                                 default=lambda self: self.env.company)
     num2wo = fields.Char(string="Amount in word", compute='_onchange_amount', store=True)
     # cash_unit = fields.Boolean(string='فئات العملة', copy=False)
     # unit_500 = fields.Float(string='500 X')
@@ -142,7 +142,6 @@ class CashVoucher(models.Model):
     count_diff = fields.Integer(compute='_count_diff_compute')
     is_sending_to_related_party = fields.Boolean(string="Is sending to related party")
     is_transfer = fields.Boolean(string="Is transfer")
-
 
     def _count_je_compute(self):
         for i in self:
@@ -312,7 +311,7 @@ class CashVoucher(models.Model):
     def amount_currency_credit(self):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
-                amount =  i.amount * -1
+                amount = i.amount * -1
                 return amount / i.currency_id.rate
 
     @api.model
@@ -332,8 +331,6 @@ class CashVoucher(models.Model):
         for i in self.custody_line_ids:
             if i.currency_id != self.env.user.company_id.currency_id:
                 return self.total_amount_ex
-
-
 
     def confirm_post(self):
         global total_desc, desc
@@ -356,7 +353,7 @@ class CashVoucher(models.Model):
             amount = 0
             # currency_id = False
             currency_id = self.env.user.company_id.currency_id.id
-            total=self.total
+            total = self.total
             for i in self.custody_line_ids:
                 description = i.name
                 conc = str(i.name or '') + '/' + ' '
@@ -375,7 +372,6 @@ class CashVoucher(models.Model):
                     currency_id = self.env.user.company_id.currency_id.id
                     curr_amount = 0
 
-
                 debit_val = {
                     'move_id': self.move_id.id,
                     'name': description,
@@ -390,9 +386,9 @@ class CashVoucher(models.Model):
                 }
                 l.append((0, 0, debit_val))
             if self.currency_id != self.env.user.company_id.currency_id:
-                    credit_amount = self.amount * self.env.user.company_id.currency_id.rate
-                    currency_id = self.currency_id.id
-                    credit_curr_amount = self.amount
+                credit_amount = self.amount * self.env.user.company_id.currency_id.rate
+                currency_id = self.currency_id.id
+                credit_curr_amount = self.amount
             if self.currency_id == self.env.user.company_id.currency_id:
                 credit_amount = self.amount
                 # currency_id = False
@@ -400,23 +396,25 @@ class CashVoucher(models.Model):
                 credit_curr_amount = False
             credit_val = {
 
-                    'move_id': self.move_id.id,
-                    'name': desc,
-                    'account_id': self.account_id.id,
-                    'credit': credit_amount,
-                    'currency_id': currency_id,
-                    'partner_id': False,
-                    'company_id': self.company_id.id or False,
-                    'amount_currency': credit_curr_amount * -1,
+                'move_id': self.move_id.id,
+                'name': desc,
+                'account_id': self.account_id.id,
+                'credit': credit_amount,
+                'currency_id': currency_id,
+                'partner_id': False,
+                'company_id': self.company_id.id or False,
+                'amount_currency': credit_curr_amount * -1,
             }
             l.append((0, 0, credit_val))
-                # print("List", l).encode("utf-8")
+            # print("List", l).encode("utf-8")
             vals = {
-                    'journal_id': self.cash_journal_id.id,
-                    'date': self.request_date,
-                    'ref': self.name,
-                    'company_id': self.company_id.id or False,
-                    'line_ids': l,
+                'journal_id': self.cash_journal_id.id,
+                'date': self.request_date,
+                'invoice_date': date.today(),
+                # 'move_type': 'in_invoice',
+                'ref': self.name,
+                'company_id': self.company_id.id or False,
+                'line_ids': l,
 
             }
             self.move_id = account_move_object.create(vals)
@@ -454,7 +452,6 @@ class CashVoucher(models.Model):
             #     rec.invoice_payment_state = 'paid'
 
             # self.state = 'post'
-
 
             # ///////////////////////////////////
         # if self.amount == self.total and self.pay_type:
@@ -515,6 +512,7 @@ class CashVoucher(models.Model):
         #     'communication': self.name,
         # })
         # np.post()
+
     # def confirm_post(self):
     #     print("999999999999999999999999999999999999999")
     #     account_move_object = self.env['account.move']
@@ -586,7 +584,6 @@ class CashVoucher(models.Model):
     #
     #     self.state = 'post'
 
-
     @api.model
     def create(self, vals):
         code = 'cash.voucher.code'
@@ -640,6 +637,7 @@ class CashVoucher(models.Model):
         # self.state = 'manager'
         self.company_id = self.env.company.id
         self.state = 'accountant'
+
     def confirm_audit(self):
         global desc2, desc, accounts
 
@@ -658,18 +656,17 @@ class CashVoucher(models.Model):
             partner_name = i.partner_id.id
         self.state = 'done'
 
-
     def confirm_cashier(self):
         global desc2, desc, accounts
 
         list = []
-        list2=[]
+        list2 = []
         for i in self.custody_line_ids:
             accounts = i.name
             conc2 = str(i.account_id.name or '') + '/' + ' '
             list2.append(conc2)
             desc2 = ', '.join(list2)
-            self.accounts_ids=desc2
+            self.accounts_ids = desc2
             conc = str(i.name or '') + '/' + ' '
             list.append(conc)
             desc = ', '.join(list)
@@ -688,7 +685,8 @@ class CashVoucherLine(models.Model):
         return self.env.user.id
 
     name = fields.Char('Naration', required=True)
-    doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel4', 'doc_id', 'attach_id5', string="Attachment",
+    doc_attachment_id = fields.Many2many('ir.attachment', 'doc_attach_rel4', 'doc_id', 'attach_id5',
+                                         string="Attachment",
                                          help='You can attach the copy of your document', copy=False)
     # analytic_accont_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
     amount = fields.Float('Amount', required=True)
@@ -704,16 +702,16 @@ class CashVoucherLine(models.Model):
     state = fields.Selection(string="State", related='cash_request_id.state')
     user_name = fields.Many2one(string="User", related='cash_request_id.user_name')
     partner_id = fields.Many2one('res.partner', string='Partner')
-    analytic_accont_id = fields.Many2one('account.analytic.account',string='Analytic Account', track_visibility='onchange')
-
+    analytic_accont_id = fields.Many2one('account.analytic.account', string='Analytic Account',
+                                         track_visibility='onchange')
 
     # user_id = fields.Many2one('res.users',default=_default_user)
     # tax_amount = fields.Float('الضريبة')
 
-    is_sending_to_related_party = fields.Boolean(string="Is sending to related party", related='cash_request_id.is_sending_to_related_party')
+    is_sending_to_related_party = fields.Boolean(string="Is sending to related party",
+                                                 related='cash_request_id.is_sending_to_related_party')
     is_transfer = fields.Boolean(string="Is transfer", related='cash_request_id.is_transfer')
     is_required_analytic = fields.Boolean(string="Is analytic required", related='company_id.is_required_analytic')
-
 
     @api.depends('cash_request_id.currency_id')
     def _compute_currency(self):

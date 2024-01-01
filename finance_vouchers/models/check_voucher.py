@@ -106,6 +106,8 @@ class CheckVoucher(models.Model):
                                            [('name', '=', 'Cheque Request')]))
     person = fields.Char(string= 'Benefetary', track_visibility='onchange')
     company_id = fields.Many2one('res.company',string="Active Company", readonly=True, default=lambda self: self.env.company)
+    # company_id = fields.Many2one('res.company', string="Active Company", readonly=True,
+    #                              default=default_company)
     check_date = fields.Date(string='Cheque Date', copy=False, default=fields.Date.today())
     cheque_number = fields.Char(string='Cheque Number', copy=False)
     check_count = fields.Integer(compute='_compute_check')

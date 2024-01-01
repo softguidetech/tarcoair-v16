@@ -37,13 +37,17 @@ class AccountMove(models.Model):
     einv_sa_delivery_date = fields.Date(string='Delivery Date', default=fields.Date.context_today, copy=False)
     einv_sa_show_delivery_date = fields.Boolean(compute='_compute_einv_show_delivery_date')
     einv_sa_qr_code_str = fields.Char(string='Zatka QR Code', compute='_compute_eniv_qr_code_str')
-    einv_sa_confirmation_datetime = fields.Datetime(string='Confirmation Date', readonly=True, copy=False)
+    einv_sa_confirmation_datetime = fields.Datetime(compute='_compute_einv_sa_confirmation_datetime',string='Confirmation Date', readonly=True, copy=False)
 
     einv_sa_confirmed = fields.Boolean(compute='_compute_einv_sa_confirmation_datetime', store=True)
 
     def _compute_einv_sa_confirmation_datetime(self):
+        print("{aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         for move in self:
             move.einv_sa_confirmed = False
+            print(move.move_type,"3333333333333333333333333333333")
+            print(move.state,"44444444444444444444444444")
+            print(move.einv_sa_confirmation_datetime,"555555555555555555555555555555555")
             if not move.einv_sa_confirmation_datetime and move.state == 'posted' \
                     and move.move_type in ('out_invoice', 'out_refund'):
                 move.einv_sa_confirmed = True
@@ -71,6 +75,9 @@ class AccountMove(models.Model):
 
         for record in self:
             qr_code_str = ''
+            print(qr_code_str,"111111111111111111111111111111111111111111111")
+            print(record.einv_sa_confirmation_datetime,"2222222222222222222222222")
+            # record.einv_sa_confirmation_datetime = fields.Datetime.now()
             if record.einv_sa_confirmation_datetime and record.company_id.vat:
                 seller_name_enc = get_qr_encoding(1, record.company_id.display_name)
                 company_vat_enc = get_qr_encoding(2, record.company_id.vat)

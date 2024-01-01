@@ -6,11 +6,22 @@ from odoo.exceptions import AccessError
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
+    # @api.model
+    # def default_get(self, fields):
+    #     res = super(ResPartner, self).default_get(fields)
+    #     print(res,"666666666666666666666666666666")
+    #     print(res['type'],"77777777777777777777777777777")
+    #     if res['type'] != 'contact':
+    #         res.update({'company_id': self.env.user.company_id.id,})
+    #
+    #     return res
+
     @api.model
     def create(self, vals):
         user = self.env.user
         if user.has_group('tarcoair_extension.group_partner_creation'):
-            vals['company_id'] = user.company_id.id
+            if not self._context.get('from_company'):
+                vals['company_id'] = user.company_id.id
             return super(ResPartner, self).create(vals)
         else:
             raise AccessError(_("You do not have permission to create partners. Please contact your administrator."))
