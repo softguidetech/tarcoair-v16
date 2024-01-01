@@ -49,21 +49,34 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="confirm_manager" string="To Accountant" type="object"
+                        <button name="confirm_manager" string="إلي المدير" type="object"
                                 class="oe_highlight" states="draft" groups="base.group_user"/>
-                        <button name="confirm_cashier" string="To Auditor" type="object"
+                        <button name="confirm_cashier" string="الي المراجعة الداخلية" type="object"
                                 class="oe_highlight" states="manager" groups="finance_vouchers.group_cash_voucher_cs"/>
-                        <button name="unlink" string="Cancel" type="object"
-                                states="post" groups="account.group_account_manager"/>
-                        <!--                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>-->
-                        <button name="confirm_audit" string="To Final Approval" type="object"
+                        <button name="unlink" string="الغاء" type="object"
+                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <button name="confirm_audit" string="إلي الخزينة" type="object"
                                 class="oe_highlight" states="audit" groups="finance_vouchers.group_cash_voucher_cs"/>
-                        <button name="confirm_post" string="Post" type="object"
-                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>
-                        <!--                        <button name="confirm_post" string="ترحيل" type="object"-->
-                        <!--                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>-->
-                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>
+                        <button name="confirm_post" string="ترحيل" type="object"
+                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,manager,audit,done,post,cancel"/>
                     </header>
+                    <!--                    <header>-->
+                    <!--                        <button name="confirm_manager" string="To Accountant" type="object"-->
+                    <!--                                class="oe_highlight" states="draft" groups="base.group_user"/>-->
+                    <!--                        <button name="confirm_cashier" string="To Auditor" type="object"-->
+                    <!--                                class="oe_highlight" states="manager" groups="finance_vouchers.group_cash_voucher_cs"/>-->
+                    <!--                        <button name="unlink" string="Cancel" type="object"-->
+                    <!--                                states="post" groups="account.group_account_manager"/>-->
+                    <!--                        &lt;!&ndash;                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>&ndash;&gt;-->
+                    <!--                        <button name="confirm_audit" string="To Final Approval" type="object"-->
+                    <!--                                class="oe_highlight" states="audit" groups="finance_vouchers.group_cash_voucher_cs"/>-->
+                    <!--                        <button name="confirm_post" string="Post" type="object"-->
+                    <!--                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>-->
+                    <!--                        &lt;!&ndash;                        <button name="confirm_post" string="ترحيل" type="object"&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>&ndash;&gt;-->
+                    <!--                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>-->
+                    <!--                    </header>-->
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_check_view" class="oe_stat_button"
@@ -98,9 +111,9 @@
                         <group col="6" colspan="6" string="Cheque Voucher Info">
                             <field name="request_date" readonly="1"/>
                             <field name="check_date"/>
-                            <field name="cash_journal_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'accountant')],'invisible': [('state','in',['draft','manager','audit'])]}"/>
-<!--                            <field name="cash_journal_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],-->
-<!--                            'invisible': [('state','in',['draft','manager','audit'])]}"/>-->
+                            <!--                            <field name="cash_journal_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'accountant')],'invisible': [('state','in',['draft','manager','audit'])]}"/>-->
+                            <field name="cash_journal_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],
+                            'invisible': [('state','in',['draft','manager','audit'])]}"/>
                             <field name="person"/>
                             <field name="amount"/>
                             <field name="num2wo" readonly="1"/>
@@ -140,9 +153,9 @@
                             <page string="Accounting Details">
                                 <!--</group>-->
                                 <group col="4" colspan="4">
-                                    <field name="account_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'accountant')],'invisible': [('state','in',['draft','manager','audit'])]}"/>
-<!--                                    <field name="account_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],-->
-<!--                             'invisible': [('state','in',['draft','manager','audit'])]}"/>-->
+                                    <!--                                    <field name="account_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'accountant')],'invisible': [('state','in',['draft','manager','audit'])]}"/>-->
+                                    <field name="account_id" options="{'no_create': True}" attrs="{'required': [('state','=', 'done')],
+                             'invisible': [('state','in',['draft','manager','audit'])]}"/>
 
                                     <field name="move_id" readonly="1"/>
                                 </group>

@@ -54,20 +54,28 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="confirm_manager" string="To Accountant" type="object"
-                                class="oe_highlight" states="draft" groups="base.group_user"/>
 
-<!--                        <button name="confirm_post" string="إعتماد" type="object"-->
-<!--                                class="oe_highlight" states="draft" groups="finance_vouchers.group_cash_voucher_cs"/>-->
-
-                        <button name="confirm_post" string="Confirm" type="object"
-                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>
-                        <button name="unlink" string="Cancel" type="object"
-                                states="post" groups="account.group_account_manager"/>
-<!--                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>-->
-
-                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>
+                        <button name="confirm_post" string="إعتماد" type="object"
+                                class="oe_highlight" states="draft" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <button name="unlink" string="الغاء" type="object"
+                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,post,cancel"/>
                     </header>
+                    <!--                    <header>-->
+                    <!--                        <button name="confirm_manager" string="To Accountant" type="object"-->
+                    <!--                                class="oe_highlight" states="draft" groups="base.group_user"/>-->
+
+                    <!--&lt;!&ndash;                        <button name="confirm_post" string="إعتماد" type="object"&ndash;&gt;-->
+                    <!--&lt;!&ndash;                                class="oe_highlight" states="draft" groups="finance_vouchers.group_cash_voucher_cs"/>&ndash;&gt;-->
+
+                    <!--                        <button name="confirm_post" string="Confirm" type="object"-->
+                    <!--                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>-->
+                    <!--                        <button name="unlink" string="Cancel" type="object"-->
+                    <!--                                states="post" groups="account.group_account_manager"/>-->
+                    <!--&lt;!&ndash;                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>&ndash;&gt;-->
+
+                    <!--                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>-->
+                    <!--                    </header>-->
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_check_view" class="oe_stat_button"
@@ -126,7 +134,8 @@
                                         <field name="state" invisible="1"/>
                                         <field name="is_required_analytic" invisible="1"/>
                                         <field name="account_id" onchange="_get_partner"/>
-                                        <field name="analytic_account_id" attrs="{'required': [('is_required_analytic', '=', True)]}"/>
+                                        <field name="analytic_account_id"
+                                               attrs="{'required': [('is_required_analytic', '=', True)]}"/>
                                         <field name="partner_id"/>
                                         <field name="name"/>
                                         <field name="currency_id"/>
@@ -242,7 +251,6 @@
                 </kanban>
             </field>
         </record>
-
 
 
         <menuitem id="check_inbound_root_ch1_ch1" name="Check In" parent="cash_vouchers_ch2"

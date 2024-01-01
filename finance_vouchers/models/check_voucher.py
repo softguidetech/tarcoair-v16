@@ -556,9 +556,9 @@ class CheckVoucher(models.Model):
             desc = ', '.join(list)
             self.description = desc
             partner_name = i.partner_id.id
-        # self.state = 'manager'
+        self.state = 'manager'
         self.company_id = self.env.company.id
-        self.state = 'accountant'
+        # self.state = 'accountant'
     def confirm_audit(self):
         list = []
         for i in self.custody_line_ids:

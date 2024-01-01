@@ -462,7 +462,8 @@ class RequestInbound(models.Model):
             self.description = desc
             partner_name = i.partner_id.id
         self.company_id = self.env.company.id
-        self.state = 'accountant'
+        # self.state = 'accountant'
+        self.state = 'manager'
 
     def confirm_audit(self):
         list = []

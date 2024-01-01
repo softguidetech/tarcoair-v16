@@ -85,7 +85,7 @@
 
         <template id="einv_sa.partner_info">
             <div class="row p-1 mt-1  bg-light">
-                <div class="col-3">
+                <div class="col-3 text-center">
                     <Strong>Buyer</Strong>
                 </div>
                 <div class="col-5 text-right">

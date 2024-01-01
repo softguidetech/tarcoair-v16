@@ -551,7 +551,8 @@ class CheckInbound(models.Model):
             self.description = desc
             partner_name = i.partner_id.id
         self.company_id = self.env.company.id
-        self.state = 'accountant'
+        # self.state = 'accountant'
+        self.state = 'manager'
 
 class CheckInboundLine(models.Model):
     _name = 'check.inbound.line'

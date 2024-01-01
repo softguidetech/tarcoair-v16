@@ -178,16 +178,21 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="confirm_manager" string="To Accountant" type="object"
-                                class="oe_highlight" states="draft" groups="base.group_user"/>
-                        <!--                        <button name="confirm_post" string="ترحيل" type="object"-->
-                        <!--                                class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>-->
-                        <button name="confirm_post" string="Confirm" type="object"
-                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>
-                        <button name="unlink" string="Cancel" type="object"
-                                states="post" groups="account.group_account_manager"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>
+                        <button name="confirm_post" string="ترحيل" type="object"
+                                class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>
+                       <field name="state" widget="statusbar" statusbar_visible="draft,post,cancel"/>
                     </header>
+                    <!--                    <header>-->
+                    <!--                        <button name="confirm_manager" string="To Accountant" type="object"-->
+                    <!--                                class="oe_highlight" states="draft" groups="base.group_user"/>-->
+                    <!--                        &lt;!&ndash;                        <button name="confirm_post" string="ترحيل" type="object"&ndash;&gt;-->
+                    <!--                        &lt;!&ndash;                                class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>&ndash;&gt;-->
+                    <!--                        <button name="confirm_post" string="Confirm" type="object"-->
+                    <!--                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>-->
+                    <!--                        <button name="unlink" string="Cancel" type="object"-->
+                    <!--                                states="post" groups="account.group_account_manager"/>-->
+                    <!--                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>-->
+                    <!--                    </header>-->
 
                     <sheet>
                         <div class="oe_button_box" name="button_box">
