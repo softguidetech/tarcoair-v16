@@ -178,9 +178,20 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="confirm_post" string="ترحيل" type="object"
-                                class="oe_highlight" states="draft" groups="finance_vouchers.group_request_inbound_mg"/>
-                       <field name="state" widget="statusbar" statusbar_visible="draft,post,cancel"/>
+                        <button name="confirm_manager" string="إلي المدير" type="object"
+                                class="oe_highlight" states="draft" groups="base.group_user"/>
+                        <button name="reject" string="draft" type="object"
+                                class="oe_highlight" states="done" groups="base.group_user"/>
+                        <button name="confirm_cashier" string="To Auditor" type="object"
+                                class="oe_highlight" states="manager" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <button name="unlink" string="Cancel" type="object"
+                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <button name="confirm_audit" string="To final Approval" type="object"
+                                class="oe_highlight" states="audit" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <button name="confirm_post" string="تأكيد" type="object"
+                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,manager,audit,done,post,cancel"/>
                     </header>
                     <!--                    <header>-->
                     <!--                        <button name="confirm_manager" string="To Accountant" type="object"-->

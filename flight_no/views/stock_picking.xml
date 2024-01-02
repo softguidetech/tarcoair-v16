@@ -1,27 +1,27 @@
 <odoo>
     <data>
 
-  <record id="view_account_move_inherit" model="ir.ui.view">
+        <record id="view_account_move_inherit" model="ir.ui.view">
             <field name="name">view.account.move.form.inherit</field>
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='ref']" position="after">
-                        <field name="root_id"/>
-                      <field name="flight_no"/>
-                                                             <field name="username"/>
+                    <field name="root_id"/>
+                    <field name="flight_no" required="1"/>
+                    <field name="username"/>
 
                 </xpath>
             </field>
         </record>
-         <record id="view_picking_form_inherit" model="ir.ui.view">
+        <record id="view_picking_form_inherit" model="ir.ui.view">
             <field name="name">view.picking.form.inherit</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='origin']" position="after">
-                        <field name="root_id"/>
-                      <field name="flight_no"/>
+                    <field name="root_id"/>
+                    <field name="flight_no"/>
                 </xpath>
             </field>
         </record>

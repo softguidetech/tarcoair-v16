@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields,api,_
 
 
 class PartnerCategory(models.Model):
@@ -8,9 +8,10 @@ class PartnerCategory(models.Model):
     #     return self.env.company
 
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company)
-    debit_account_id = fields.Many2one('account.account', string='Debit Account',
+    debit_account_id = fields.Many2one('account.account',company_dependent=True, string='Debit Account',
                                        domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
                                        )
-    credit_account_id = fields.Many2one('account.account', string='Credit Account',
+    credit_account_id = fields.Many2one('account.account',company_dependent=True, string='Credit Account',
                                         domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
                                         )
+

@@ -54,28 +54,34 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-
-                        <button name="confirm_post" string="إعتماد" type="object"
-                                class="oe_highlight" states="draft" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <button name="confirm_manager" string="إلي المدير" type="object"
+                                class="oe_highlight" states="draft" groups="base.group_user"/>
+                        <button name="confirm_cashier" string="الي المراجعة الداخلية" type="object"
+                                class="oe_highlight" states="manager" groups="finance_vouchers.group_cash_voucher_cs"/>
                         <button name="unlink" string="الغاء" type="object"
                                 states="post" groups="finance_vouchers.group_cash_voucher_cs"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,post,cancel"/>
+                        <button name="confirm_audit" string="إلي الخزينة" type="object"
+                                class="oe_highlight" states="audit" groups="finance_vouchers.group_cash_voucher_cs"/>
+                        <button name="confirm_post" string="ترحيل" type="object"
+                                class="oe_highlight" states="done" groups="finance_vouchers.group_cash_voucher_mg"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,manager,audit,done,post,cancel"/>
                     </header>
-                    <!--                    <header>-->
-                    <!--                        <button name="confirm_manager" string="To Accountant" type="object"-->
-                    <!--                                class="oe_highlight" states="draft" groups="base.group_user"/>-->
+<!--                    <header>-->
+<!--                        <button name="confirm_manager" string="To Accountant" type="object"-->
+<!--                                class="oe_highlight" states="draft" groups="base.group_user"/>-->
 
-                    <!--&lt;!&ndash;                        <button name="confirm_post" string="إعتماد" type="object"&ndash;&gt;-->
-                    <!--&lt;!&ndash;                                class="oe_highlight" states="draft" groups="finance_vouchers.group_cash_voucher_cs"/>&ndash;&gt;-->
+<!--                        &lt;!&ndash;                        <button name="confirm_post" string="إعتماد" type="object"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                                class="oe_highlight" states="draft" groups="finance_vouchers.group_cash_voucher_cs"/>&ndash;&gt;-->
 
-                    <!--                        <button name="confirm_post" string="Confirm" type="object"-->
-                    <!--                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>-->
-                    <!--                        <button name="unlink" string="Cancel" type="object"-->
-                    <!--                                states="post" groups="account.group_account_manager"/>-->
-                    <!--&lt;!&ndash;                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>&ndash;&gt;-->
+<!--                        <button name="confirm_post" string="Confirm" type="object"-->
+<!--                                class="oe_highlight" states="accountant" groups="account.group_account_manager"/>-->
+<!--                        <button name="unlink" string="Cancel" type="object"-->
+<!--                                states="post" groups="account.group_account_manager"/>-->
+<!--                        &lt;!&ndash;                                states="post" groups="finance_vouchers.group_cash_voucher_cs"/>&ndash;&gt;-->
 
-                    <!--                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>-->
-                    <!--                    </header>-->
+<!--                        <field name="state" widget="statusbar" statusbar_visible="draft,accountant,post,cancel"/>-->
+<!--                    </header>-->
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_check_view" class="oe_stat_button"

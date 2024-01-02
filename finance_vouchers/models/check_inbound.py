@@ -54,6 +54,7 @@ class CheckInbound(models.Model):
     sequence = fields.Integer(required=True, default=1,)
     state = fields.Selection([('draft','Draft'),
                               ('manager', 'Direct Manager'),
+                              ('audit', 'Auditing'),
                               ('accountant', 'Accountant'),
                               ('done', 'Final Approval'),
                               ('post', 'Post'),
@@ -539,7 +540,10 @@ class CheckInbound(models.Model):
             desc = ', '.join(list)
             self.description = desc
             partner_name = i.partner_id.id
-        self.write({'state': 'done'})
+        if self.amount != self.total:
+            raise ValidationError(_('Total amount not equal to total currency amount'))
+        if self.amount == self.total:
+            self.state = 'audit'
 
     def confirm_manager(self):
         list = []
@@ -553,6 +557,17 @@ class CheckInbound(models.Model):
         self.company_id = self.env.company.id
         # self.state = 'accountant'
         self.state = 'manager'
+
+    def confirm_audit(self):
+        list = []
+        for i in self.custody_line_ids:
+            description = i.name
+            conc = str(i.name or '') + '/' + ' '
+            list.append(conc)
+            desc = ', '.join(list)
+            self.description = desc
+            partner_name = i.partner_id.id
+        self.state = 'done'
 
 class CheckInboundLine(models.Model):
     _name = 'check.inbound.line'
