@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Define the model -->
+        <record id="view_zenith_invoice_form" model="ir.ui.view">
+            <field name="name">zenith.invoice.form</field>
+            <field name="model">zenith.invoice</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group col="4">
+                                <field name="customer_id" options="{'no_create': True}"/>
+                                <field name="agency_name"/>
+                                <field name="date_of_payment"/>
+                                <field name="payment_amount"/>
+                                <field name="sale_currency"/>
+                                <field name="available_credit_before_payment"/>
+                                <field name="credit_currency"/>
+                                <field name="available_credit_after_payment"/>
+                                <field name="payment_registered_by"/>
+                            </group>
+                            <group col="4">
+                                <field name="authorized_credit"/>
+                                <field name="authorized_currency"/>
+                                <field name="total_sold"/>
+                                <field name="sold_currency"/>
+                                <field name="total_paid"/>
+                                <field name="paid_currency"/>
+                                <field name="reference_number"/>
+                                <field name="sales_report"/>
+                                <field name="fop"/>
+                                <field name="transaction_number"/>
+                                <field name="is_invoice_sync"/>
+                                <field name="invoice_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <!-- Define the tree view -->
+        <record id="view_zenith_invoice_tree" model="ir.ui.view">
+            <field name="name">zenith.invoice.tree</field>
+            <field name="model">zenith.invoice</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="customer_id"/>
+                    <field name="agency_name"/>
+                    <field name="date_of_payment"/>
+                    <field name="payment_amount"/>
+                    <field name="sale_currency"/>
+                    <field name="reference_number"/>
+                    <field name="is_invoice_sync"/>
+                    <field name="invoice_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Define actions -->
+        <record id="action_zenith_invoice_list" model="ir.actions.act_window">
+            <field name="name">Zenith Invoice</field>
+            <field name="res_model">zenith.invoice</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Define the menu -->
+        <menuitem id="menu_zenith_invoice" name="Zenith Invoice" parent="account.menu_finance_entries" sequence="10"/>
+        <menuitem id="menu_zenith_invoice_list" name="Invoice List" parent="menu_zenith_invoice"
+                  action="action_zenith_invoice_list"/>
+
+    </data>
+</odoo>

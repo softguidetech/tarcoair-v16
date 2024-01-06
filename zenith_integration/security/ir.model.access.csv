@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_zenith_sync_wizard,zenith.sync.wizard,model_zenith_sync_wizard,base.group_user,1,1,1,1
+access_zenith_transaction_type,transaction.type,model_zenith_transaction_type,base.group_user,1,1,1,1
+access_zenith_transaction_classification,zenith.transaction.classification,model_zenith_transaction_classification,base.group_user,1,1,1,1
+access_zenith_invoice,zenith.invoice,model_zenith_invoice,base.group_user,1,1,1,1

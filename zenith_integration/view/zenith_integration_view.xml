@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="action_zenith_sync_wizard" model="ir.actions.act_window">
+        <field name="name">Zenith Sync Wizard</field>
+        <field name="res_model">zenith.sync.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="zenith_integration.view_zenith_sync_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_account_invoice_form_custom" model="ir.ui.view">
+        <field name="name">account.invoice.form.custom</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_draft']" position="after">
+                <button string="Zenith Sync" type="object" class="oe_highlight" name="action_show_zenith_sync_wizard"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

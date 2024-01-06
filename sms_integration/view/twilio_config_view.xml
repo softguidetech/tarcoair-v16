@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--  Form views -->
+        <record id="view_twilio_config_form" model="ir.ui.view">
+            <field name="name">twilio.config.form</field>
+            <field name="model">twilio.config</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="account_sid"/>
+                                <field name="auth_token"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_twilio_config_tree" model="ir.ui.view">
+            <field name="name">twilio.config.tree</field>
+            <field name="model">twilio.config</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="account_sid"/>
+                    <field name="auth_token"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--  actions -->
+        <record id="action_twilio_config" model="ir.actions.act_window">
+            <field name="name">Twilio Configuration</field>
+            <field name="res_model">twilio.config</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_twilio_config_tree"/>
+            <field name="view_id" ref="view_twilio_config_form"/>
+        </record>
+
+        <menuitem id="menu_twilio_config_form" name="Configure Twilio" parent="sms_integration.menu_sms_conf"
+                  action="action_twilio_config"/>
+    </data>
+</odoo>

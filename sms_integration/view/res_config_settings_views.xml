@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sms_config_settings_form" model="ir.ui.view">
+        <field name="name">sms.config.settings.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="5"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="SMS" string="SMS" data-key="sms_integration"
+                     groups="base.group_user">
+                    <h2>SMS Template</h2>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <label for="tarcoair_sms_template_id" string="Invoice SMS Template" class="oe_inline"/>
+                            :
+                            <field name="tarcoair_sms_template_id" options="{'no_create_edit': True}" force_save="1"
+                                   widget="selection"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="account_sid" string="Twilio Account SID" class="oe_inline"/>
+                            :
+                            <field name="account_sid" force_save="1"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="auth_token" string="Twilio Auth Token" class="oe_inline"/>
+                            :
+                            <field name="auth_token" force_save="1"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="sms_host_number" string="SMS Host Mobile with county code" class="oe_inline"/>
+                            :
+                            <field name="sms_host_number" force_save="1"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_sms_config_settings" model="ir.actions.act_window">
+        <field name="name">SMS Config Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'sms_integration'}</field>
+    </record>
+
+
+    <menuitem id="menu_sms_config_settings" name="Settings"
+              parent="account.menu_finance"
+              sequence="11"
+              action="action_sms_config_settings"
+              groups="base.group_system"/>
+
+</odoo>

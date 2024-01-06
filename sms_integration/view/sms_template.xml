@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sms_template_form" model="ir.ui.view">
+        <field name="name">sms.template.form</field>
+        <field name="model">tarcoair.sms.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="template" widget="text" options="{'style': 'width: 100%; height: 200px;'}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_sms_template" model="ir.actions.act_window">
+        <field name="name">SMS Templates</field>
+        <field name="res_model">tarcoair.sms.template</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_sms_conf" name="SMS configurations" parent="account.menu_finance_configuration"
+              sequence="8"/>
+    <menuitem id="menu_sms_transaction_type" parent="menu_sms_conf" name="SMS Configuration"
+              action="action_sms_template"/>
+</odoo>

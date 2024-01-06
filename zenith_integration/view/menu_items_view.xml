@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <menuitem id="menu_zenith_conf" name="Zenith configurations" parent="account.menu_finance_configuration" sequence="7"/>
+        <menuitem id="menu_zenith_transaction_type" parent="menu_zenith_conf" name="Transaction Types"
+                  action="action_zenith_transaction_type"/>
+        <menuitem id="menu_zenith_transaction_classification" parent="menu_zenith_conf"
+                  name="Transaction Classifications"
+                  action="action_zenith_transaction_classification"/>
+</odoo>
