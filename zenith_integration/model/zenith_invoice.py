@@ -26,4 +26,3 @@ class ZenithInvoice(models.Model):
     is_invoice_sync = fields.Boolean(string='Is Invoice Sync')
     invoice_id = fields.Many2one('account.move', string='Invoice ID')
 
-    # Add any additional methods or constraints as needed
