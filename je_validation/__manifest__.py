@@ -18,12 +18,12 @@
     "depends": ['web', 'base','fleet','account'],
 
     "data": [
-        "security/ir.model.access.csv",
-        "views/car_ticket_views.xml",
-        "views/location_location_view.xml",
-        "reports/car_ticket_layout.xml",
-        "reports/car_ticket_report_template.xml",
-        "reports/car_ticket_report.xml",
+        # "security/ir.model.access.csv",
+        # "views/car_ticket_views.xml",
+        # "views/location_location_view.xml",
+        # "reports/car_ticket_layout.xml",
+        # "reports/car_ticket_report_template.xml",
+        # "reports/car_ticket_report.xml",
     ],
 
     "installable": True,
