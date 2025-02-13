@@ -10,9 +10,10 @@ class AccountMove(models.Model):
 
 
     def action_post(self):
-        if self.amount_total == 0;
-            raise ValidationError('Please be sure total of entry should be greater than zero !!')
-        for rec in self.invoice_line_ids:
-            if rec.price_total == 0:
-                raise ValidationError('Please be sure total of some line should be greater than zero !!')
-        super(AccountMove,self).action_post()
+        for rec in self:
+            if rec.amount_total == 0;
+                raise ValidationError('Please be sure total of entry should be greater than zero !!')
+            for i in rec.invoice_line_ids:
+                if i.price_total == 0:
+                    raise ValidationError('Please be sure total of some line should be greater than zero !!')
+            super(AccountMove,rec).action_post()
