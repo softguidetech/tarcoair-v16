@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Form view for API Configuration -->
+        <record id="view_loca_loca_form" model="ir.ui.view">
+            <field name="name">loca.loca.form</field>
+            <field name="model">loca.loca</field>
+            <field name="arch" type="xml">
+                <form>
+                    
+                    <sheet>
+                        <group>
+                            <group>
+                                 <field name="name"/>
+                                
+                            </group>
+                           </group>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+       
+        <record id="view_loca_loca" model="ir.ui.view">
+            <field name="name">loca.loca</field>
+            <field name="model">loca.loca</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    
+                </tree>
+            </field>
+        </record>
+
+    
+        <record id="action_loca_loca" model="ir.actions.act_window">
+            <field name="name">Locations</field>
+            <field name="res_model">loca.loca</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <menuitem id="menu_location" parent="cargo_main_menu" name="Locations"
+                  action="action_loca_loca"/>
+    </data>
+</odoo>
