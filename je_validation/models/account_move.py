@@ -16,4 +16,4 @@ class AccountMove(models.Model):
         for i in self.invoice_line_ids:
             if i.price_total == 0:
                 raise ValidationError('Please be sure total of some line should be greater than zero !!')
-        super(AccountMove,rec).action_post()
+        super(AccountMove,self).action_post()
