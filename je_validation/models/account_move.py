@@ -11,9 +11,9 @@ class AccountMove(models.Model):
 
     def action_post(self):
         # for rec in self:
-        if self.amount_total == 0:
+        if self.amount_total == 0 and self.state == 'draft':
             raise ValidationError('Please be sure total of entry should be greater than zero !!')
         for i in self.invoice_line_ids:
-            if i.price_total == 0:
+            if i.price_total == 0 and self.state == 'draft':
                 raise ValidationError('Please be sure total of some line should be greater than zero !!')
         super(AccountMove,self).action_post()
