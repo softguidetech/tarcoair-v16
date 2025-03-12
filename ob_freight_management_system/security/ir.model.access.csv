@@ -16,3 +16,5 @@ access_freight_order_track,freight.order.track,model_freight_order_track,base.gr
 access_custom_clearance_revision_wizard,custom.clearance.revision.wizard,model_custom_clearance_revision_wizard,base.group_user,1,1,1,1
 access_custom_clearance_revision,custom.clearance.revision,model_custom_clearance_revision,base.group_user,1,1,1,1
 access_freight_order_track_line,freight.order.track_line,model_freight_order_track_line,base.group_user,1,1,1,1
+access_freight_shipper,freight.shipper,model_freight_shipper,base.group_user,1,1,1,0
+access_freight_consignee,freight.consignee,model_freight_consignee,base.group_user,1,1,1,0
