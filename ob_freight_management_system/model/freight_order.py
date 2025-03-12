@@ -98,7 +98,7 @@ class FreightOrder(models.Model):
             'date': self.order_date,
             'loading_port_id': self.loading_port_id.id,
             'discharging_port_id': self.discharging_port_id.id,
-            'line_ids': [(6, 0, self.line_ids.ids)]
+            # 'line_ids': [(6, 0, self.line_ids.ids)]
             # 'agent_id': self.agent_id.id,
         })
         result = {

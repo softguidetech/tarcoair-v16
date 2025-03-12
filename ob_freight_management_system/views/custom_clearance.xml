@@ -49,7 +49,7 @@
                                             <field name="name"/>
                                             <field name="shipper_id"/>
                                             <field name="consignee_id"/>
-                                            <field name="total_price"/>
+                                            <!--<field name="total_price"/>-->
                                             <field name="document"/>
                                         </tree>
                                     </field>
