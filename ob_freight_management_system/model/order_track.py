@@ -14,7 +14,10 @@ class FreightTracking(models.Model):
                                        ('water', 'Water')], "Transport")
     type = fields.Selection([('received', 'Received'),
                              ('delivered', 'Delivered')], 'Received/Delivered')
-
+    shipper_id = fields.Many2one('res.partner', 'Shipper', required=True,
+                                 help="Shipper's Details")
+    consignee_id = fields.Many2one('res.partner', 'Consignee',
+                                   help="Details of consignee")
     def order_submit(self):
         """Create tracking details of order"""
         self.env['freight.track'].create({

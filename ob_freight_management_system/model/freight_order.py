@@ -9,7 +9,7 @@ class FreightOrder(models.Model):
     _description = 'Freight Order'
 
     name = fields.Char('Name', default='New', readonly=True)
-    shipper_id = fields.Many2one('res.partner', 'Shipper', required=True,
+    shipper_id = fields.Many2one('res.partner', 'Shipper',
                                  help="Shipper's Details")
     consignee_id = fields.Many2one('res.partner', 'Consignee',
                                    help="Details of consignee")
@@ -26,11 +26,11 @@ class FreightOrder(models.Model):
     water_type = fields.Selection([('fcl', 'FCL'), ('lcl', 'LCL')],
                                   'Water Shipping',
                                   help="Types of shipment movement involved in Water")
-    order_date = fields.Date('Date', default=fields.Date.today(),
+    order_date = fields.Date('Issue Date', default=fields.Date.today(),
                              help="Date of order")
-    loading_port_id = fields.Many2one('freight.port', string="Loading Port",
+    loading_port_id = fields.Many2one('freight.port', string="Transshipment Port",
                                       required=True,
-                                      help="Loading port of the freight order")
+                                      help="Transshipment port of the freight order")
     discharging_port_id = fields.Many2one('freight.port',
                                           string="Discharging Port",
                                           required=True,
@@ -59,7 +59,9 @@ class FreightOrder(models.Model):
                                help="Details of agent")
     expected_date = fields.Date('Expected Date')
     track_ids = fields.One2many('freight.track', 'track_id')
-
+    note = fields.Html(string='Notes')
+    fleet_id = fields.Many2one('fleet.vehicle',string='Asset',required=True)
+    
     @api.depends('order_ids.total_price', 'order_ids.volume',
                  'order_ids.weight')
     def _compute_total_order_price(self):
@@ -363,6 +365,11 @@ class FreightOrderLine(models.Model):
     total_price = fields.Float('Total Price')
     volume = fields.Float('Volume')
     weight = fields.Float('Weight')
+    
+    shipper_id = fields.Many2one('res.partner', 'Shipper', required=True,
+                                 help="Shipper's Details")
+    consignee_id = fields.Many2one('res.partner', 'Consignee',
+                                   help="Details of consignee")
 
     @api.constrains('weight')
     def _check_weight(self):

@@ -7,7 +7,7 @@
     'author': 'Otibro Techni Pvt Ltd.',
     'company': 'Otibro Techni Pvt Ltd.',
     'website': 'https://otibro.com/odoo-erp-software/',
-    'depends': ['base', 'product', 'account'],
+    'depends': ['base', 'product', 'account','fleet'],
     'images': ['static/description/banner.png',
                 'static/description/icon.png',],
     'data': [
