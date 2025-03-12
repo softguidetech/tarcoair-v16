@@ -9,6 +9,8 @@
                     <field name="name"/>
                     <field name="type"/>
                     <field name="transport_type"/>
+                    <field name="loading_port_id"/>
+                    <field name="discharging_port_id"/>
                 </tree>
             </field>
         </record>
@@ -86,6 +88,7 @@
                             <page string="Order">
                                 <field name="order_ids">
                                     <tree string="Order Lines" editable="bottom">
+                                        <field name="number"/>
                                         <field name="shipper_id"/>
                                         <field name="consignee_id"/>
                                         <field name="container_id"/>
@@ -165,7 +168,7 @@
     </record>
 
         <record id="action_freight_order" model="ir.actions.act_window">
-            <field name="name">Freight Order</field>
+            <field name="name">Delivery Request</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">freight.order</field>
             <field name="view_mode">tree,form</field>

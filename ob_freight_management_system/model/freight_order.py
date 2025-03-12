@@ -98,6 +98,7 @@ class FreightOrder(models.Model):
             'date': self.order_date,
             'loading_port_id': self.loading_port_id.id,
             'discharging_port_id': self.discharging_port_id.id,
+            'line_ids': [(6, 0, self.line_ids.ids)]
             # 'agent_id': self.agent_id.id,
         })
         result = {
@@ -370,7 +371,11 @@ class FreightOrderLine(models.Model):
                                  help="Shipper's Details")
     consignee_id = fields.Many2one('freight.consignee', 'Consignee',
                                    help="Details of consignee")
-
+    number = fields.Char(string='Number',)
+    
+    # def _compute_number(self):
+    #     for rec in self:
+    #         rec.number = order_id.
     @api.constrains('weight')
     def _check_weight(self):
         """Checking the weight of containers"""
