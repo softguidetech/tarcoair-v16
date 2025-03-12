@@ -10,7 +10,7 @@ class CustomClearance(models.Model):
     name = fields.Char('Name', compute='_compute_name')
     freight_id = fields.Many2one('freight.order', required=True)
     date = fields.Date('Date')
-    agent_id = fields.Many2one('res.partner', 'Agent', required=True)
+    agent_id = fields.Many2one('res.partner', 'Agent')
     loading_port_id = fields.Many2one('freight.port', string="Loading Port")
     discharging_port_id = fields.Many2one('freight.port',
                                           string="Discharging Port")
