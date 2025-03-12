@@ -17,7 +17,7 @@ class CustomClearance(models.Model):
     line_ids = fields.One2many('custom.clearance.line', 'line_id')
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('done', 'Done')], default='draft')
-
+    
     @api.depends('freight_id')
     def _compute_name(self):
         """Compute the name of custom clearance"""
@@ -117,10 +117,16 @@ class CustomClearanceLine(models.Model):
     _name = 'custom.clearance.line'
     _description = 'Custom Clearance Line'
 
+    
+    shipper_id = fields.Many2one('freight.shipper', 'Shipper', required=True,
+                                 help="Shipper's Details")
+    consignee_id = fields.Many2one('freight.consignee', 'Consignee',
+                                   help="Details of consignee")
+
     name = fields.Char('Document Name')
     document = fields.Binary(string="Documents", store=True, attachment=True)
     line_id = fields.Many2one('custom.clearance')
-
+    
 
 class CustomClearanceRevision(models.Model):
     _name = 'custom.clearance.revision'

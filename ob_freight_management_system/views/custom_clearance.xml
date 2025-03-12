@@ -47,6 +47,8 @@
                                     <field name="line_ids">
                                         <tree string="Order Lines" editable="bottom">
                                             <field name="name"/>
+                                            <field name="shipper_id"/>
+                                            <field name="consignee_id"/>
                                             <field name="document"/>
                                         </tree>
                                     </field>

@@ -74,9 +74,9 @@
                             </group>
                         </group>
                         <group>
-                            <group>
-                                <field name="agent_id"/>
-                            </group>
+                            <!--<group>-->
+                            <!--    <field name="agent_id"/>-->
+                            <!--</group>-->
                             <group>
                                 <field name="expected_date"/>
                                 <field name="note"/>

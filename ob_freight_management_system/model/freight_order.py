@@ -55,7 +55,7 @@ class FreightOrder(models.Model):
     service_ids = fields.One2many('freight.order.service', 'line_id')
     total_service_sale = fields.Float('Service Total Sale',
                                       compute="_compute_total_service_cost")
-    agent_id = fields.Many2one('res.partner', 'Agent', required=True,
+    agent_id = fields.Many2one('res.partner', 'Agent',
                                help="Details of agent")
     expected_date = fields.Date('Expected Date')
     track_ids = fields.One2many('freight.track', 'track_id')
@@ -366,9 +366,9 @@ class FreightOrderLine(models.Model):
     volume = fields.Float('Volume')
     weight = fields.Float('Weight')
     
-    shipper_id = fields.Many2one('res.partner', 'Shipper', required=True,
+    shipper_id = fields.Many2one('freight.shipper', 'Shipper', required=True,
                                  help="Shipper's Details")
-    consignee_id = fields.Many2one('res.partner', 'Consignee',
+    consignee_id = fields.Many2one('freight.consignee', 'Consignee',
                                    help="Details of consignee")
 
     @api.constrains('weight')
