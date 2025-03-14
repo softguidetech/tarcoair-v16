@@ -13,6 +13,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/freight_order_data.xml',
+        'views/import_main.xml',
         'views/freight_order.xml',
         'views/freight_port.xml',
         'views/freight_container.xml',
