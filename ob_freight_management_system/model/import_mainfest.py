@@ -21,7 +21,7 @@ class ImportMainefest(models.Model):
                               ('cancel', 'Cancel')], default='draft')
     clearance_count = fields.Integer(compute='compute_count')
     
-    def _total_weight'(self):
+    def _total_weight(self):
         for rec in self:
             total = 0
             for i in rec.line_ids:
@@ -69,7 +69,7 @@ class ImportMainfestLine(models.Model):
     number = fields.Char('AWB Number',required=True)
     n_of_p = fields.Char('Number of Pices',required=True)
     cargo_type_id = fields.Many2one('cargo.type',string='Cargo Type')
-    net_weight = fields.Float('Net Weight',required=True)
+    net_weight = fields.Float('Net Weight/KG',required=True)
     des_of_goods = fields.Char('Description of Goods',required=True)
     shipper = fields.Char('Shipper',required=True)
     consignee = fields.Many2one('res.partner',string="Consignee",required=True)
