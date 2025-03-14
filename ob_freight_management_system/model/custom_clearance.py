@@ -60,7 +60,7 @@ class CustomClearance(models.Model):
             for order in self.import_main_id.line_ids:
                 if self.number and order.cargo_type_id:
                     if self.number == order.number:
-                        time_days = self.datetime.datetime.now() - order.import_ma_id.entering_date
+                        time_days = datetime.now() - order.import_ma_id.entering_date
                         hours= time_days.days * 24
                         price_unit = order.cargo_type_id.price * order.net_weight
                         value = (0, 0, {
