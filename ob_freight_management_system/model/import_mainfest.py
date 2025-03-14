@@ -73,11 +73,15 @@ class ImportMainefest(models.Model):
             else:
                 rec.clearance_count = 0
                 
+            total=0
+            li = []
             for i in rec.line_ids:
-                total=0
-                if rec.env['account.move'].search([('ref', '=', i.number)]):
-                    total+=rec.env['account.move'].search_count([('ref', '=', i.number)])
-                rec.invoice_count = total
+                li.append(rec.number)
+            # for i in rec.line_ids:
+                
+            #     # if rec.env['account.move'].search([('ref', '=', i.number)]):
+            rec.invoice_count = rec.env['account.move'].search_count([('ref', 'in', li)])
+             
                 
                 # else:
                 #     rec.invoice_count = 0
