@@ -129,7 +129,9 @@ class CustomClearance(models.Model):
         for rec in self:
             li = []
             for i in rec.import_main_id.line_ids:
-                li.append(i.number)
+                if rec.number == i.number:
+                    li.append(rec.number)
+                    
             for i in rec.import_main_id.line_ids:
                 if not rec.env['import.main.line'].search([('import_ma_id', '=', rec.id),('number', 'in', li)]):
                     raise ValidationError('Please insert Correct AWB Number!!')
