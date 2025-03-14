@@ -50,7 +50,7 @@ class ImportMainefest(models.Model):
         # self.clearance = True
         return result
         
-    @api.depends('name')
+    # @api.depends('name')
     def compute_count(self):
         """Compute custom clearance and account move's count"""
         for rec in self:
