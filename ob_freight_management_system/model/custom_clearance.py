@@ -7,6 +7,7 @@ from odoo.exceptions import ValidationError
 class CustomClearance(models.Model):
     _name = 'custom.clearance'
     _description = 'Custom Clearance'
+    _rec_name = 'import_main_id'
 
     name = fields.Char('Name', compute='_compute_name')
     freight_id = fields.Many2one('freight.order', )
