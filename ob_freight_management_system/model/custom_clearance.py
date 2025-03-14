@@ -118,7 +118,15 @@ class CustomClearance(models.Model):
             rec.agent_id = rec.freight_id.agent_id
 
     def action_confirm(self):
-        self.state = 'confirm'
+        for rec in self:
+            li = []
+            for i in rec.import_main_id.line_ids:
+                li.append(i.number)
+            for i in rec.import_main_id.line_ids:
+                if not rec.env['import.main.line'].search([('import_ma_id', '=', rec.id),('number', 'in', li)]):
+                    raise ValidationError('Please insert Correct AWB Number!!')
+                else:
+                    self.state = 'confirm'
         # """Send mail to inform agents to custom clearance is confirmed"""
         # for rec in self:
         #     rec.name = 'CC' \
