@@ -100,8 +100,8 @@ class CustomClearance(models.Model):
                         }
                         self.state = 'done'
                         return result
-                    else:
-                        raise ValidationError('Please Enter Correct AWB Number!!')
+                    # else:
+                    #     raise ValidationError('Please Enter Correct AWB Number!!')
                 else:
                     raise ValidationError('Please write correct Number to proceed the invoice!!')
 
