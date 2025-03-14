@@ -41,9 +41,16 @@ class CustomClearance(models.Model):
         }
         
     def compute_count(self):
+        li = []
+        
+            
         for rec in self:
-            if rec.env['account.move'].search([('ref', '=', self.import_main_id.number)]):
-                rec.invoice_count = rec.env['account.move'].search_count([('ref', '=', self.import_main_id.number)])
+            for i in rec.import_main_id.line_ids:
+                if rec.number == i.number:
+                    li.append(rec.number)
+            
+            if rec.env['account.move'].search([('ref', 'in', li)]):
+                rec.invoice_count = rec.env['account.move'].search_count([('ref', '=', li)])
             else:
                 rec.invoice_count = 0
                     
