@@ -21,6 +21,7 @@ class CustomClearance(models.Model):
                               ('done', 'Done')], default='draft')
     # order_ids = fields.One2many('freight.order.line', 'clearance_id')
     import_main_id = fields.Many2one('import.main',string='Import Mainefest')
+    removal_date = fields.Datetime('Removal Date')
     number = fields.Char(string='AWB Number')
     invoice_count = fields.Integer(compute='compute_count')
     
@@ -58,9 +59,9 @@ class CustomClearance(models.Model):
         lines = []
         if self.import_main_id.line_ids:
             for order in self.import_main_id.line_ids:
-                if self.number and order.cargo_type_id:
+                if self.number and order.cargo_type_id and self.removal_date:
                     if self.number == order.number:
-                        time_days = datetime.now() - order.import_ma_id.entering_date
+                        time_days = self.removal_date - order.import_ma_id.entering_date
                         hours= time_days.days * 24
                         price_unit = order.cargo_type_id.price * order.net_weight
                         value = (0, 0, {

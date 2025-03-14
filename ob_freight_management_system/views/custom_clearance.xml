@@ -49,6 +49,8 @@
                                     <field name="import_main_id"/>
                                     <field name="date"/>
                                     <field name="number"/>
+                                    <field name="removal_date"/>
+                                    
                                 </group>
                                 <group>
                                     <!--<field name="agent_id"/>-->
