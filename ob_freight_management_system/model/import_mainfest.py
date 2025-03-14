@@ -47,7 +47,7 @@ class ImportMainefest(models.Model):
             'import_main_id': self.id,
             'date': self.entering_date,
             'loading_port_id': self.point_of_loading.id,
-            'discharging_port_id': self.dpoint_of_unloading.id,
+            'discharging_port_id': self.point_of_unloading.id,
             # 'line_ids': [(6, 0, self.line_ids.ids)]
             # 'agent_id': self.agent_id.id,
         })
