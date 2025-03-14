@@ -79,8 +79,8 @@ class ImportMainefest(models.Model):
                     total+=rec.env['account.move'].search_count([('ref', '=', i.number)])
                 rec.invoice_count = total
                 
-                else:
-                    rec.invoice_count = 0
+                # else:
+                #     rec.invoice_count = 0
 
     def get_invoice(self):
         """View the invoice"""
