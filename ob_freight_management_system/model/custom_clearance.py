@@ -31,12 +31,20 @@ class CustomClearance(models.Model):
     def get_invoice(self):
         """View the invoice"""
         self.ensure_one()
+        li = []
+        
+            
+        for rec in self:
+            for i in rec.import_main_id.line_ids:
+                if rec.number == i.number:
+                    li.append(rec.number)
+                    
         return {
             'type': 'ir.actions.act_window',
             'name': 'Invoice',
             'view_mode': 'tree,form',
             'res_model': 'account.move',
-            'domain': [('ref', '=', self.name)],
+            'domain': [('ref', 'in', li)],
             'context': "{'create': False}"
         }
         
