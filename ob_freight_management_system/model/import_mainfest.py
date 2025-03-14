@@ -20,6 +20,7 @@ class ImportMainefest(models.Model):
                               ('invoice', 'Invoiced'), ('done', 'Done'),
                               ('cancel', 'Cancel')], default='draft')
     clearance_count = fields.Integer(compute='compute_count')
+    invoice_count = fields.Integer(compute='compute_count')
     
     def get_custom_clearance(self):
         """Get custom clearance"""
@@ -71,8 +72,30 @@ class ImportMainefest(models.Model):
                     [('import_main_id', '=', rec.id)])
             else:
                 rec.clearance_count = 0
-            
+                
+            for i in rec.line_ids:
+                total=0
+                if rec.env['account.move'].search([('ref', '=', i.number)]):
+                    total+=rec.env['account.move'].search_count([('ref', '=', i.number)])
+                rec.invoice_count = total
+                
+                else:
+                    rec.invoice_count = 0
 
+    def get_invoice(self):
+        """View the invoice"""
+        self.ensure_one()
+        li = []
+        for rec in self.line_ids:
+            li.append(rec.number)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoice',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move',
+            'domain': [('ref', 'in', li)],
+            'context': "{'create': False}"
+        }
             
 class ImportMainfestLine(models.Model):
     _name = 'import.main.line'
