@@ -65,7 +65,7 @@
                             <group>
                                 <field name="flight_no"/>
                                 <field name="flight_date"/>
-                                <field name="transport_type"/>
+                                <!--<field name="transport_type"/>-->
                                 <field name="entering_date"/>
                             </group>
                         </group>
@@ -80,7 +80,13 @@
                                         <field name="des_of_goods"/>
                                         <field name="shipper"/>
                                         <field name="consignee"/>
-                                        
+                                        <field name="cargo_type_id"/>
+                                        <field name="origin"/>
+                                        <field name="destination"/>
+                                        <field name="scc"/>
+                                        <field name="custom_status"/>
+                                        <field name="mft_remarks"/>
+                                       
                                     </tree>
                                 </field>
                                 <group class="oe_subtotal_footer oe_right" colspan="2">
