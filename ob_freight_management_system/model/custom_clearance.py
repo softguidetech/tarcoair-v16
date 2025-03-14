@@ -62,7 +62,7 @@ class CustomClearance(models.Model):
                 if self.number and order.cargo_type_id and self.removal_date:
                     if self.number == order.number:
                         time_days = self.removal_date - order.import_ma_id.entering_date
-                        hours= time_days.days * 24
+                        hours= time_days.days * 24 * -1
                         price_unit = order.cargo_type_id.price * order.net_weight
                         value = (0, 0, {
                             'name': order.number,
