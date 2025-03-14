@@ -76,7 +76,7 @@ class ImportMainefest(models.Model):
             total=0
             li = []
             for i in rec.line_ids:
-                li.append(rec.number)
+                li.append(i.number)
             # for i in rec.line_ids:
                 
             #     # if rec.env['account.move'].search([('ref', '=', i.number)]):
