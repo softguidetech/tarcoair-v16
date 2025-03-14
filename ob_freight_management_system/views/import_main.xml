@@ -11,7 +11,7 @@
                     <field name="point_of_unloading"/>
                     <field name="flight_no"/>
                     <field name="flight_date"/>
-                    <field name="transport_type"/>
+                    <!--<field name="transport_type"/>-->
                     <field name="entering_date"/>
                 </tree>
             </field>
