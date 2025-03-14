@@ -24,7 +24,7 @@
                     <form>
                         <header>
                             <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
-                            <!--<button name="action_revision" string="Revision" type="object" class="oe_highlight" states="confirm"/>-->
+                            <button name="action_return" string="Retern to draft" type="object"  states="done"/>
                             <button name="create_invoice" string="Invoice" type="object" class="oe_highlight" states="confirm"
                                 data-hotkey="w"/>
                                 

@@ -25,6 +25,9 @@ class CustomClearance(models.Model):
     number = fields.Char(string='AWB Number')
     invoice_count = fields.Integer(compute='compute_count')
     
+    def action_return(self):
+        self.state= 'draft'
+        
     def get_invoice(self):
         """View the invoice"""
         self.ensure_one()
