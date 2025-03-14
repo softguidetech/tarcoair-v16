@@ -23,6 +23,18 @@ class CustomClearance(models.Model):
     number = fields.Char(string='AWB Number')
     invoice_count = fields.Integer(compute='compute_count')
     
+    def get_invoice(self):
+        """View the invoice"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Invoice',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move',
+            'domain': [('ref', '=', self.name)],
+            'context': "{'create': False}"
+        }
+        
     def compute_count(self):
         for rec in self:
             if rec.env['account.move'].search([('ref', '=', rec.name)]):
