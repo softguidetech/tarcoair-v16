@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="import_main_tree_view" model="ir.ui.view">
+            <field name="name">Import Main</field>
+            <field name="model">import.main</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="registration"/>
+                    <field name="point_of_unloading"/>
+                    <field name="flight_no"/>
+                    <field name="flight_date"/>
+                    <field name="transport_type"/>
+                    <field name="entering_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="import_main_form_view" model="ir.ui.view">
+        <field name="name">Import Main</field>
+        <field name="model">import.main</field>
+        <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="create_custom_clearance" string="Clearance" type="object" class="oe_highlight"
+                                data-hotkey="w"/>
+                        <!--<button name="action_submit" string="Submit" type="object" class="oe_highlight"-->
+                        <!--        data-hotkey="w" states="draft"/>-->
+                        <!--<button name="action_confirm" string="Confirm" type="object" class="oe_highlight"-->
+                        <!--        data-hotkey="w" states="submit"/>-->
+                        <!--<button name="create_invoice" string="Invoice" type="object" class="oe_highlight" states="confirm"-->
+                        <!--        data-hotkey="w"/>-->
+                        <!--<button name="track_order" string="Tracking" type="object" class="oe_highlight" states="confirm,invoice"-->
+                        <!--        data-hotkey="w"/>-->
+                        <!--<button name="action_done" string="Done" type="object" class="oe_highlight" states="confirm,invoice"-->
+                        <!--        data-hotkey="w"/>-->
+                        <!--<button name="action_cancel" string="Cancel" type="object" states="draft,submit,confirm,invoice"-->
+                        <!--        data-hotkey="w"/>-->
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submit,confirm" readonly="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="get_custom_clearance"
+                                icon="fa-id-card-o">
+                                <field string="Clearance" name="clearance_count" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="object" name="get_invoice"
+                                icon="fa-pencil-square-o">
+                                <field string="Invoice" name="invoice_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1 class="mt0" >
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+    
+                                <field name="name"/>
+                                <field name="registration"/>
+                                <field name="point_of_unloading"/>
+                            </group>
+                            <group>
+                                <field name="flight_no"/>
+                                <field name="flight_date"/>
+                                <field name="transport_type"/>
+                                <field name="entering_date"/>
+                            </group>
+                        </group>
+                      
+                        <notebook>
+                            <page string="Mainefest Cargo">
+                                <field name="line_ids">
+                                    <tree string="Mainefest" editable="bottom">
+                                        <field name="number"/>
+                                        <field name="n_of_p"/>
+                                        <field name="net_weight"/>
+                                        <field name="des_of_goods"/>
+                                        <field name="shipper"/>
+                                        <field name="consignee"/>
+                                        
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2">
+                                    
+                                    <div class="oe_inline o_td_label">
+                                        <label for="total_weight"/>
+                                    </div>
+                                    <field name="total_weight" nolabel="1"/>
+                                    
+                                </group>
+                            </page>
+                           
+                        </notebook>
+                    </sheet>
+                </form>
+        </field>
+    </record>
+
+        <record id="action_import_main" model="ir.actions.act_window">
+            <field name="name">Import Mainefest</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">import.main</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Define a new Import Mainefest
+              </p>
+            </field>
+
+        </record>
+
+        <menuitem id="menu_freight_root" name="Shipping" sequence="4" />
+        <menuitem id="menu_freight_order" name="Import Mainefest" parent="menu_freight_root" sequence="2" action="action_import_main"/>
+
+    </data>
+</odoo>

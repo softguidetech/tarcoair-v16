@@ -149,10 +149,23 @@
               </p>
             </field>
         </record>
+        
+        <record id="action_cargo_price" model="ir.actions.act_window">
+            <field name="name">Cargo Typee</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">cargo.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Define a new Cargo Type
+              </p>
+            </field>
+        </record>
 
         <menuitem id="menu_configuration" name="Configuration" sequence="4" parent="menu_freight_root" />
         <menuitem id="menu_freight_port" name="Ports" parent="menu_configuration" sequence="2" action="action_freight_port"/>
         <menuitem id="menu_freight_price" name="Pricing List" parent="menu_configuration" sequence="2" action="action_freight_price"/>
+        <menuitem id="menu_cargo_price" name="Cargo Type" parent="menu_configuration" sequence="3" action="action_cargo_price"/>
         <menuitem id="menu_freight_routes" name="Route Operations" parent="menu_configuration" sequence="2" action="action_freight_routes"/>
 
     </data>

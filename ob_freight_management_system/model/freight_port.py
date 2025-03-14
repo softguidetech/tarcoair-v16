@@ -23,7 +23,7 @@ class FreightPricing(models.Model):
     name = fields.Char('Name', required=True)
     volume = fields.Float('Volume Price', required=True)
     weight = fields.Float('Weight Price', required=True)
-
+    
 
 class FreightRoutes(models.Model):
     _name = 'freight.routes'
@@ -33,3 +33,10 @@ class FreightRoutes(models.Model):
     land_sale = fields.Float('Sale Price for Land', required=True)
     air_sale = fields.Float('Sale Price for Air', required=True)
     water_sale = fields.Float('Sale Price for Water', required=True)
+
+class CargoType(models.Model):
+    _name = 'cargo.type'
+    
+    name = fields.Char(string='Cargo Type',required=True)
+    price = fields.Float('Kg-hour Price',required=True)
+    

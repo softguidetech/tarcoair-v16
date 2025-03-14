@@ -1,7 +1,8 @@
 
 from werkzeug import urls
 from odoo import api, fields, models, _
-
+from datetime import datetime
+from odoo.exceptions import ValidationError
 
 class CustomClearance(models.Model):
     _name = 'custom.clearance'
@@ -18,7 +19,17 @@ class CustomClearance(models.Model):
     state = fields.Selection([('draft', 'Draft'), ('confirm', 'Confirm'),
                               ('done', 'Done')], default='draft')
     # order_ids = fields.One2many('freight.order.line', 'clearance_id')
+    import_main_id = fields.Many2one('import.main',string='Import Mainefest')
+    number = fields.Char(string='AWB Number')
+    invoice_count = fields.Integer(compute='compute_count')
     
+    def compute_count(self):
+        for rec in self:
+            if rec.env['account.move'].search([('ref', '=', rec.name)]):
+                rec.invoice_count = rec.env['account.move'].search_count([('ref', '=', rec.name)])
+            else:
+                rec.invoice_count = 0
+                    
     @api.depends('freight_id')
     def _compute_name(self):
         """Compute the name of custom clearance"""
@@ -27,7 +38,50 @@ class CustomClearance(models.Model):
                 rec.name = 'CC - ' + str(rec.freight_id.name)
             else:
                 rec.name = 'CC - '
+    
+    # 
+    def create_invoice(self):
+        """Create invoice"""
+        lines = []
+        if self.import_main_id.line_ids:
+            for order in self.import_main_id.line_ids:
+                if self.number and order.cargo_type_id:
+                    if self.number = order.number:
+                        time_days = self.datetime.datetime.now() - order.import_ma_id.entering_date
+                        hours= time_days.days * 24
+                        price_unit = order.cargo_type_id.price
+                        value = (0, 0, {
+                            'name': order.number,
+                            'price_unit': price_unit,
+                            'quantity': hours,
+                        })
+                        lines.append(value)
+                    
+                        invoice_line = {
+                            'move_type': 'out_invoice',
+                            'partner_id': order.consignee.id,
+                            'invoice_user_id': self.env.user.id,
+                            'invoice_origin': order.number,
+                            'ref': self.name,
+                            'invoice_line_ids': lines,
+                        }
+                        inv = self.env['account.move'].sudo().create(invoice_line)
+                        result = {
+                            'name': 'action.name',
+                            'type': 'ir.actions.act_window',
+                            'views': [[False, 'form']],
+                            'target': 'current',
+                            'res_id': inv.id,
+                            'res_model': 'account.move',
+                        }
+                        self.state = 'done'
+                        return result
+                else:
+                    raise ValidationError('Please write correct Number to proceed the invoice!!')
 
+
+    # 
+    
     @api.onchange('freight_id')
     def _onchange_freight_id(self):
         """Getting default values for loading and discharging port"""

@@ -19,15 +19,23 @@
                     <form>
                         <header>
                             <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
-                            <button name="action_revision" string="Revision" type="object" class="oe_highlight" states="confirm"/>
+                            <!--<button name="action_revision" string="Revision" type="object" class="oe_highlight" states="confirm"/>-->
+                            <button name="create_invoice" string="Invoice" type="object" class="oe_highlight" states="confirm"
+                                data-hotkey="w"/>
+                                
                             <field name="state" widget="statusbar" statusbar_visible="draft,confirm" readonly="1"/>
                         </header>
                         <sheet>
                             <div class="oe_button_box" name="button_box">
-                                <button class="oe_stat_button" type="object" name="get_revision"
-                                    icon="fa-id-card-o" string="Revision">
-                                </button>
-                            </div>
+                            <!--    <button class="oe_stat_button" type="object" name="get_revision"-->
+                            <!--        icon="fa-id-card-o" string="Revision">-->
+                            <!--    </button>-->
+                           
+                             <button class="oe_stat_button" type="object" name="get_invoice"
+                                icon="fa-pencil-square-o">
+                                <field string="Invoice" name="invoice_count" widget="statinfo"/>
+                            </button>
+                             </div>
                             <group>
                                 <field name="name"/>
                             </group>
@@ -35,6 +43,7 @@
                                 <group>
                                     <field name="freight_id"/>
                                     <field name="date"/>
+                                    <field name="number"/>
                                 </group>
                                 <group>
                                     <field name="agent_id"/>
