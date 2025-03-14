@@ -53,20 +53,20 @@
                         </div>
                         <div class="oe_title">
                             <h1 class="mt0" >
-                                <field name="name"/>
+                                <field name="name" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </h1>
                         </div>
                         <group>
                             <group>
     
-                                <field name="name"/>
-                                <field name="registration"/>
-                                <field name="point_of_loading"/>
-                                <field name="point_of_unloading"/>
+                                <!--<field name="name"/>-->
+                                <field name="registration" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="point_of_loading" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="point_of_unloading" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </group>
                             <group>
-                                <field name="flight_no"/>
-                                <field name="flight_date"/>
+                                <field name="flight_no" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="flight_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <!--<field name="transport_type"/>-->
                                 <field name="entering_date"/>
                             </group>
@@ -74,7 +74,7 @@
                       
                         <notebook>
                             <page string="Mainefest Cargo">
-                                <field name="line_ids">
+                                <field name="line_ids" attrs="{'readonly': [('state', '!=', 'draft')]}">
                                     <tree string="Mainefest" editable="bottom">
                                         <field name="number"/>
                                         <field name="n_of_p"/>

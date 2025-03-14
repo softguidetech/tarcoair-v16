@@ -150,6 +150,32 @@
             </field>
         </record>
         
+        <record id="cargo_type_tree_view" model="ir.ui.view">
+            <field name="name">Cargo Type</field>
+            <field name="model">cargo.type</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="cargo_type_form_view" model="ir.ui.view">
+            <field name="name">Cargo Type</field>
+            <field name="model">cargo.type</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                    <field name="name"/>
+                    <field name="price"/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
         <record id="action_cargo_price" model="ir.actions.act_window">
             <field name="name">Cargo Typee</field>
             <field name="type">ir.actions.act_window</field>
