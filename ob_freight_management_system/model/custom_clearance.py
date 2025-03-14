@@ -130,7 +130,7 @@ class CustomClearance(models.Model):
             li = []
             for i in rec.import_main_id.line_ids:
                 if rec.number == i.number:
-                    li.append(rec.number)
+                    li.append(i.number)
                     
             for i in rec.import_main_id.line_ids:
                 if not rec.env['import.main.line'].search([('import_ma_id', '=', rec.id),('number', 'in', li)]):
