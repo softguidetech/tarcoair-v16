@@ -21,6 +21,18 @@ class ImportMainefest(models.Model):
                               ('cancel', 'Cancel')], default='draft')
     clearance_count = fields.Integer(compute='compute_count')
     
+    def get_custom_clearance(self):
+        """Get custom clearance"""
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Custom Clearance',
+            'view_mode': 'tree,form',
+            'res_model': 'custom.clearance',
+            'domain': [('import_main_id', '=', self.id)],
+            'context': "{'create': False}"
+        }
+        
     def _total_weight(self):
         for rec in self:
             total = 0
