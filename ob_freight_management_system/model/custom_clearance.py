@@ -87,6 +87,7 @@ class CustomClearance(models.Model):
                             'name': order.number,
                             'price_unit': price_unit,
                             'quantity': hours,
+                            'account_id': 4381,
                         })
                         lines.append(value)
                     
@@ -95,6 +96,7 @@ class CustomClearance(models.Model):
                             'partner_id': order.consignee.id,
                             'invoice_user_id': self.env.user.id,
                             'invoice_origin': self.number,
+                            
                             'ref': self.number,
                             'invoice_line_ids': lines,
                         }

@@ -81,6 +81,7 @@
                                         <field name="net_weight"/>
                                         <field name="des_of_goods"/>
                                         <field name="shipper"/>
+                                        <field name="consignee_free"/>
                                         <field name="consignee"/>
                                         <field name="cargo_type_id"/>
                                         <field name="origin"/>
