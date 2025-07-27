@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    inherit user form view-->
+    <data>
+        <record id="view_res_users_form_inherit_rgb_restrict_customer" model="ir.ui.view">
+            <field name="name">res.users.form.inherit.rgb.restrict.customer</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='share']" position="after">
+                    <field name="allowed_customer_ids" widget="many2many_tags"/>
+
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

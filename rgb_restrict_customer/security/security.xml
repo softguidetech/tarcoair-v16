@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!--        group_rgb_restrict_customer-->
+        <record id="group_rgb_restrict_customer" model="res.groups">
+            <field name="name">Restrict Customer Access</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
+<!--&lt;!&ndash;        record rule for partners &ndash;&gt;-->
+<!--        <record id="rgb_restrict_customer_rule" model="ir.rule">-->
+<!--            <field name="name">Restrict Customer Access</field>-->
+<!--            <field name="model_id" ref="base.model_res_partner"/>-->
+<!--            <field name="domain_force">[('id', '=', user.partner_id.id), ('id', 'in', user.allowed_customer_ids.ids)]</field>-->
+<!--            <field name="groups" eval="[(4, ref('rgb_restrict_customer.group_rgb_restrict_customer'))]"/>-->
+<!--        </record>-->
+
+<!--&lt;!&ndash;        account.move&ndash;&gt;-->
+<!--        <record id="rgb_restrict_customer_account_move_rule" model="ir.rule">-->
+<!--            <field name="name">Restrict Customer Access on Account Move</field>-->
+<!--            <field name="model_id" ref="account.model_account_move"/>-->
+<!--            <field name="domain_force">[('partner_id', '=', user.partner_id.id), ('partner_id', 'in', user.allowed_customer_ids.ids)]</field>-->
+<!--            <field name="groups" eval="[(4, ref('rgb_restrict_customer.group_rgb_restrict_customer'))]"/>-->
+<!--        </record>-->
+
+<!--&lt;!&ndash;        account.payment&ndash;&gt;-->
+<!--        <record id="rgb_restrict_customer_account_payment_rule" model="ir.rule">-->
+<!--            <field name="name">Restrict Customer Access on Account Payment</field>-->
+<!--            <field name="model_id" ref="account.model_account_payment"/>-->
+<!--            <field name="domain_force">[('partner_id', '=', user.partner_id.id), ('partner_id', 'in', user.allowed_customer_ids.ids)]</field>-->
+<!--            <field name="groups" eval="[(4, ref('rgb_restrict_customer.group_rgb_restrict_customer'))]"/>-->
+<!--        </record>-->
+
+    </data>
+</odoo>

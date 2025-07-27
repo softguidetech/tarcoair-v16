@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_res_company_form_inherit_rgb_restrict_customer" model="ir.ui.view">
+            <field name="name">res.company.form.inherit.rgb.restrict.customer</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="print_only_posted_invoices"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>
