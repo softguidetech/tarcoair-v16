@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Invoice Form View to Show Fixed Tax in Totals -->
+    <record id="view_account_move_form_fixed_tax_total" model="ir.ui.view">
+        <field name="name">account.move.form.fixed.tax.total</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Add fixed tax amount before tax_totals in invoice totals section -->
+            <xpath expr="//group[@class='oe_subtotal_footer']//field[@name='tax_totals']" position="before">
+                <div class="row" invisible="not company_id.enable_fixed_tax or not total_fixed_tax or move_type == 'entry'">
+                    <div class="col-6 text-end">
+                        <label string="Fixed Tax Amount:"/>
+                    </div>
+                    <div class="col-6 text-end">
+                        <field name="total_fixed_tax" 
+                               widget="monetary" 
+                               options="{'currency_field': 'currency_id'}"
+                               readonly="1"
+                               nolabel="1"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

@@ -10,6 +10,25 @@ _logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    total_fixed_tax = fields.Monetary(
+        string='Total Fixed Tax',
+        compute='_compute_total_fixed_tax',
+        currency_field='currency_id',
+        store=False,
+        help='Total fixed tax amount from all invoice lines'
+    )
+    
+    @api.depends('invoice_line_ids.fixed_tax_amount', 'company_id.enable_fixed_tax')
+    def _compute_total_fixed_tax(self):
+        """Compute total fixed tax amount from invoice lines"""
+        for move in self:
+            if move.company_id.enable_fixed_tax and move.is_invoice(include_receipts=True):
+                move.total_fixed_tax = sum(move.invoice_line_ids.filtered(
+                    lambda l: not l.display_type
+                ).mapped('fixed_tax_amount'))
+            else:
+                move.total_fixed_tax = 0.0
+
     def _create_fixed_tax_journal_items(self):
         """
         Create journal items for fixed tax amounts from invoice lines.
@@ -41,41 +60,14 @@ class AccountMove(models.Model):
         if not lines_with_fixed_tax:
             return
         
-        # Get tax account - use company's default tax account
+        # Get tax account from company settings
         company = self.company_id
         
-        # Try to find a tax account from existing tax lines
-        existing_tax_account = self.line_ids.filtered(
-            lambda l: l.tax_line_id and l.account_id
-        )
-        if existing_tax_account:
-            tax_account = existing_tax_account[0].account_id
-        else:
-            # Try to get from company chart template or use a default account
-            # For sales: use tax receivable account, for purchase: use tax payable account
-            if self.move_type in ('out_invoice', 'out_refund'):
-                # Customer invoice - use tax account from chart or default
-                tax_account = self.env['account.account'].search([
-                    ('company_id', '=', company.id),
-                    ('account_type', '=', 'liability_current'),
-                    ('deprecated', '=', False),
-                ], limit=1)
-            else:
-                # Vendor bill - use tax account from chart or default
-                tax_account = self.env['account.account'].search([
-                    ('company_id', '=', company.id),
-                    ('account_type', '=', 'asset_current'),
-                    ('deprecated', '=', False),
-                ], limit=1)
+        if not company.fixed_tax_account_id:
+            _logger.warning('Fixed Tax Account is not configured in company settings for invoice %s. Skipping fixed tax journal items.', self.name)
+            raise UserError(_('Fixed Tax Account is not configured in company settings. Please configure it in Company > Fixed Tax settings.'))
         
-        if not tax_account:
-            # Last resort: use the first invoice line account
-            invoice_line_accounts = lines_with_fixed_tax.mapped('account_id')
-            if invoice_line_accounts:
-                tax_account = invoice_line_accounts[0]
-            else:
-                _logger.warning('Cannot determine tax account for fixed tax on invoice %s. Skipping fixed tax journal items.', self.name)
-                return
+        tax_account = company.fixed_tax_account_id
         
         # Create journal items for fixed taxes
         journal_items = []

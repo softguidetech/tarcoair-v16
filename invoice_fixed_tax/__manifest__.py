@@ -26,6 +26,7 @@ Features:
         'security/ir.model.access.csv',
         'views/res_company_views.xml',
         'views/account_move_line_views.xml',
+        'views/account_move_views.xml',
     ],
     'installable': True,
     'application': False,

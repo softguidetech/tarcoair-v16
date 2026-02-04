@@ -13,6 +13,11 @@
                             <field name="enable_fixed_tax" 
                                    widget="boolean_toggle"
                                    help="Enable this to allow fixed amount taxes on invoice lines. When enabled, invoice lines will have a fixed tax amount field that creates separate journal items in the Journal Voucher."/>
+                            <field name="fixed_tax_account_id" 
+                                   required="enable_fixed_tax"
+                                   attrs="{'required': [('enable_fixed_tax', '=', True)], 'invisible': [('enable_fixed_tax', '=', False)]}"
+                                   options="{'no_create': True, 'no_create_edit': True}"
+                                   help="Account to be used for fixed tax journal items. This account will appear in Journal Voucher for fixed tax amounts."/>
                         </group>
                     </group>
                 </page>
