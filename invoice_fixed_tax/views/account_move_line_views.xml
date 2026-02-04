@@ -1,33 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Invoice Line Form View -->
-    <record id="view_move_line_form_fixed_tax" model="ir.ui.view">
-        <field name="name">account.move.line.form.fixed.tax</field>
-        <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_move_line_form"/>
+    <!-- Invoice Line List View Extension (embedded in invoice form) -->
+    <record id="view_account_move_form_invoice_lines_fixed_tax" model="ir.ui.view">
+        <field name="name">account.move.form.invoice.lines.fixed.tax</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <!-- Add fixed tax amount field after price_unit -->
-            <xpath expr="//field[@name='price_unit']" position="after">
-                <field name="company_enable_fixed_tax" invisible="1"/>
-                <field name="fixed_tax_amount" 
-                       invisible="not company_enable_fixed_tax or display_type"
-                       widget="monetary"
-                       options="{'currency_field': 'currency_id'}"/>
-            </xpath>
-        </field>
-    </record>
-
-    <!-- Invoice Line Tree View -->
-    <record id="view_move_line_tree_fixed_tax" model="ir.ui.view">
-        <field name="name">account.move.line.tree.fixed.tax</field>
-        <field name="model">account.move.line</field>
-        <field name="inherit_id" ref="account.view_move_line_tree"/>
-        <field name="arch" type="xml">
-            <!-- Add fixed tax amount column after price_unit -->
-            <xpath expr="//field[@name='price_unit']" position="after">
+            <!-- Add fixed tax amount field after price_unit in invoice lines list -->
+            <xpath expr="//field[@name='invoice_line_ids']//list//field[@name='price_unit']" position="after">
                 <field name="company_enable_fixed_tax" column_invisible="1"/>
                 <field name="fixed_tax_amount" 
                        column_invisible="not company_enable_fixed_tax or display_type"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="hide"/>
+            </xpath>
+            <!-- Add fixed tax amount field in invoice line form view (mobile) -->
+            <xpath expr="//field[@name='invoice_line_ids']//form//field[@name='price_unit']" position="after">
+                <field name="company_enable_fixed_tax" invisible="1"/>
+                <field name="fixed_tax_amount" 
+                       invisible="not company_enable_fixed_tax or display_type"
                        widget="monetary"
                        options="{'currency_field': 'currency_id'}"/>
             </xpath>
