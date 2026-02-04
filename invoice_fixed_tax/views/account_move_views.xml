@@ -8,6 +8,7 @@
         <field name="arch" type="xml">
             <!-- Add fixed tax amount before tax_totals in invoice totals section -->
             <xpath expr="//field[@name='tax_totals']" position="before">
+                <field name="show_fixed_tax" invisible="1"/>
                 <div class="row" invisible="not show_fixed_tax">
                     <div class="col-6 text-end">
                         <label for="total_fixed_tax" string="Fixed Tax Amount:" class="o_form_label"/>
