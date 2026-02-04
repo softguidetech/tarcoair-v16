@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <!-- Add fixed tax amount field after account_id in invoice lines list -->
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_id']" position="before">
-                <field name="company_enable_fixed_tax" column_invisible="1"/>
+                <field name="company_enable_fixed_tax" invisible="1"/>
                 <field name="fixed_tax_amount" 
                        column_invisible="not company_enable_fixed_tax or display_type"
                        widget="monetary"
