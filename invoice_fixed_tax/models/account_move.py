@@ -18,7 +18,14 @@ class AccountMove(models.Model):
         help='Total fixed tax amount from all invoice lines'
     )
     
-    @api.depends('invoice_line_ids.fixed_tax_amount', 'company_id.enable_fixed_tax')
+    show_fixed_tax = fields.Boolean(
+        string='Show Fixed Tax',
+        compute='_compute_show_fixed_tax',
+        store=False,
+        help='Whether to show fixed tax in invoice totals'
+    )
+    
+    @api.depends('invoice_line_ids.fixed_tax_amount', 'company_id.enable_fixed_tax', 'move_type')
     def _compute_total_fixed_tax(self):
         """Compute total fixed tax amount from invoice lines"""
         for move in self:
@@ -28,6 +35,16 @@ class AccountMove(models.Model):
                 ).mapped('fixed_tax_amount'))
             else:
                 move.total_fixed_tax = 0.0
+    
+    @api.depends('company_id.enable_fixed_tax', 'total_fixed_tax', 'move_type')
+    def _compute_show_fixed_tax(self):
+        """Compute whether to show fixed tax in totals"""
+        for move in self:
+            move.show_fixed_tax = (
+                move.company_id.enable_fixed_tax 
+                and move.total_fixed_tax > 0 
+                and move.move_type != 'entry'
+            )
 
     def _create_fixed_tax_journal_items(self):
         """
