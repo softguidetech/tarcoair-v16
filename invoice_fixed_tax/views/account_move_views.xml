@@ -12,7 +12,7 @@
             </xpath>
             <!-- Add fixed tax amount before tax_totals in invoice totals section -->
             <xpath expr="//field[@name='tax_totals']" position="before">
-                <div class="row" invisible="not total_fixed_tax or move_type == 'entry'">
+                <div class="row" attrs="{'invisible': ['|', ('total_fixed_tax', '=', 0), ('move_type', '=', 'entry')]}">
                     <div class="col-6 text-end">
                         <label for="total_fixed_tax" string="Fixed Tax Amount:" class="o_form_label"/>
                     </div>
