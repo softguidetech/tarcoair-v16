@@ -10,7 +10,7 @@
             <xpath expr="//field[@name='tax_totals']" position="before">
                 <div class="row" invisible="not company_id.enable_fixed_tax or not total_fixed_tax or move_type == 'entry'">
                     <div class="col-6 text-end">
-                        <label string="Fixed Tax Amount:"/>
+                        <label for="total_fixed_tax" string="Fixed Tax Amount:" class="o_form_label"/>
                     </div>
                     <div class="col-6 text-end">
                         <field name="total_fixed_tax" 
