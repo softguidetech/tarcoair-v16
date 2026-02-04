@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Company Form View to Add Fixed Tax Setting -->
+    <record id="view_company_form_fixed_tax" model="ir.ui.view">
+        <field name="name">res.company.form.fixed.tax</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Fixed Tax" name="fixed_tax" groups="account.group_account_manager">
+                    <group>
+                        <group string="Fixed Amount Tax Configuration">
+                            <field name="enable_fixed_tax" 
+                                   widget="boolean_toggle"
+                                   help="Enable this to allow fixed amount taxes on invoice lines. When enabled, invoice lines will have a fixed tax amount field that creates separate journal items in the Journal Voucher."/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
