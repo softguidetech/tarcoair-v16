@@ -188,8 +188,3 @@ class AccountMove(models.Model):
             move._create_fixed_tax_journal_items()
         return super(AccountMove, self).action_post()
 
-    def _recompute_tax_lines(self, recompute_tax_base_amount=False):
-        """Override to include fixed tax amounts in tax computation"""
-        result = super(AccountMove, self)._recompute_tax_lines(recompute_tax_base_amount=recompute_tax_base_amount)
-        return result
-

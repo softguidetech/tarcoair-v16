@@ -34,13 +34,14 @@ class AccountMoveLine(models.Model):
     
     @api.onchange('fixed_tax_amount')
     def _onchange_fixed_tax_amount(self):
-        """Update price_unit to reflect fixed tax amount in VAT calculation"""
+        """Trigger UI recomputation.
+
+        In Odoo 16 we must not call move._recompute_tax_lines() (it doesn't exist).
+        Totals are recomputed automatically via @_compute_totals dependencies.
+        """
         for line in self:
-            if line.fixed_tax_amount and line.move_id and line.move_id.company_id.enable_fixed_tax:
-                # Trigger recomputation of totals to include fixed tax
-                # The fixed tax will be added to the tax amount through _compute_totals override
-                if line.move_id:
-                    line.move_id._recompute_tax_lines()
+            if line.move_id and not line.move_id.company_id.enable_fixed_tax:
+                line.fixed_tax_amount = 0.0
     
     @api.depends('quantity', 'discount', 'price_unit', 'tax_ids', 'currency_id', 'fixed_tax_amount', 'move_id.company_id.enable_fixed_tax')
     def _compute_totals(self):
