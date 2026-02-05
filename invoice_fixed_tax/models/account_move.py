@@ -37,6 +37,10 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         
+        # Only create in draft, before posting (posted moves are locked)
+        if self.state != 'draft':
+            return
+
         # Check if fixed tax is enabled for the company
         if not self.company_id.enable_fixed_tax:
             return
@@ -95,6 +99,10 @@ class AccountMove(models.Model):
         # Calculate tax amounts based on move type
         # For customer invoices: tax increases receivable (debit receivable, credit tax)
         # For vendor bills: tax increases payable (credit payable, debit tax)
+        receivable_debit = 0.0
+        receivable_credit = 0.0
+        payable_debit = 0.0
+        payable_credit = 0.0
         if is_customer_invoice:
             if is_refund:
                 # Customer refund: reduce receivable, so credit receivable and debit tax
@@ -134,9 +142,8 @@ class AccountMove(models.Model):
         else:
             tax_amount_currency = 0.0
         
-        # Create tax journal item (shows as separate line in JV)
-        # The tax line will debit/credit the receivable/payable account and credit/debit the tax account
-        # This ensures the move stays balanced
+        # Create fixed tax journal item (normal line on the configured tax account).
+        # We intentionally keep display_type empty so it always shows as a regular journal item line.
         tax_journal_item_vals = {
             'move_id': self.id,
             'name': _('Fixed Tax Amount'),
@@ -146,7 +153,6 @@ class AccountMove(models.Model):
             'partner_id': self.partner_id.id if self.partner_id else False,
             'date': self.date,
             'date_maturity': self.invoice_date_due or self.date,
-            'display_type': 'tax',
             'currency_id': self.currency_id.id if self.currency_id != self.company_id.currency_id else False,
             'amount_currency': tax_amount_currency,
         }
@@ -172,33 +178,18 @@ class AccountMove(models.Model):
         
         # Create all journal items
         if journal_items:
+            # We are in draft; create without triggering full dynamic sync here.
             self.env['account.move.line'].with_context(check_move_validity=False).create(journal_items)
             _logger.info('Created %d journal items for fixed taxes on invoice %s', len(journal_items), self.name)
 
     def action_post(self):
-        """Override to create fixed tax journal items before posting"""
-        result = super(AccountMove, self).action_post()
-        
-        # Create journal items for fixed taxes after posting
+        """Override to create fixed tax journal items BEFORE posting so they are included in the posted move."""
         for move in self:
-            if move.state == 'posted':
-                move._create_fixed_tax_journal_items()
-        
-        return result
+            move._create_fixed_tax_journal_items()
+        return super(AccountMove, self).action_post()
 
     def _recompute_tax_lines(self, recompute_tax_base_amount=False):
         """Override to include fixed tax amounts in tax computation"""
         result = super(AccountMove, self)._recompute_tax_lines(recompute_tax_base_amount=recompute_tax_base_amount)
-        
-        # After recomputing taxes, ensure fixed tax journal items are created if invoice is posted
-        for move in self:
-            if move.state == 'posted':
-                # Check if fixed tax journal items already exist
-                existing_fixed_tax_items = move.line_ids.filtered(
-                    lambda l: 'Fixed Tax' in (l.name or '')
-                )
-                if not existing_fixed_tax_items:
-                    move._create_fixed_tax_journal_items()
-        
         return result
 
