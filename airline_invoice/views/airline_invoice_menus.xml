@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action -->
+    <record id="action_airline_customer_invoices" model="ir.actions.act_window">
+        <field name="name">Airline Invoices</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('move_type', '=', 'out_invoice'), ('is_airline_invoice', '=', True)]</field>
+        <field name="context">{'default_move_type': 'out_invoice', 'default_is_airline_invoice': True}</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_airline_invoice_root"
+              name="Airline Invoices"
+              parent="account.menu_finance"
+              sequence="45"
+              action="action_airline_customer_invoices"
+              groups="account.group_account_invoice"/>
+</odoo>
+
+
