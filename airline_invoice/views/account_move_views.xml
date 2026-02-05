@@ -24,8 +24,8 @@
                 </group>
             </xpath>
 
-            <!-- Invoice lines list: add airline columns after account_id -->
-            <xpath expr="//field[@name='invoice_line_ids']//list//field[@name='account_id']" position="after">
+            <!-- Invoice lines list: add airline columns after account_id (support both <list> and <tree>) -->
+            <xpath expr="//field[@name='invoice_line_ids']//*[self::list or self::tree]//field[@name='account_id']" position="after">
                 <field name="air_ticket_no" optional="show" column_invisible="not parent.is_airline_invoice or display_type"/>
                 <field name="air_pax_name" optional="show" column_invisible="not parent.is_airline_invoice or display_type"/>
                 <field name="air_basic_fare" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
