@@ -16,7 +16,7 @@ class ResCompany(models.Model):
     fixed_tax_account_id = fields.Many2one(
         'account.account',
         string='Fixed Tax Account',
-        domain="[('deprecated', '=', False), ('company_id', '=', id)]",
+       
         help='Account to be used for fixed tax journal items. This account will appear in Journal Voucher for fixed tax amounts.'
     )
     

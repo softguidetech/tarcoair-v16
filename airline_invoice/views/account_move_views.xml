@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend invoice form to show Airline fields -->
+    <record id="view_move_form_airline_invoice" model="ir.ui.view">
+        <field name="name">account.move.form.airline.invoice</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Add flag (hidden) -->
+            <xpath expr="//sheet" position="inside">
+                <field name="is_airline_invoice" invisible="1"/>
+            </xpath>
+
+            <!-- Add Airline totals block near totals -->
+            <xpath expr="//field[@name='tax_totals']" position="before">
+                <group invisible="not is_airline_invoice" class="oe_subtotal_footer">
+                    <field name="airline_total_basic_fare" readonly="1" nolabel="0"/>
+                    <field name="airline_total_vat" readonly="1"/>
+                    <field name="airline_total_taxes" readonly="1"/>
+                    <field name="airline_total_baq_protect" readonly="1"/>
+                    <field name="airline_total_bill_diff" readonly="1"/>
+                    <field name="airline_total_ins_premium" readonly="1"/>
+                    <field name="airline_grand_total" readonly="1"/>
+                </group>
+            </xpath>
+
+            <!-- Invoice lines list: add airline columns after account_id -->
+            <xpath expr="//field[@name='invoice_line_ids']//list//field[@name='account_id']" position="after">
+                <field name="air_ticket_no" optional="show" column_invisible="not parent.is_airline_invoice or display_type"/>
+                <field name="air_pax_name" optional="show" column_invisible="not parent.is_airline_invoice or display_type"/>
+                <field name="air_basic_fare" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="air_vat_amount" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="air_taxes_amount" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="air_baq_protect" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="air_bill_diff" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="air_ins_premium" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                <field name="air_total_amount" optional="show" column_invisible="not parent.is_airline_invoice or display_type" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </xpath>
+
+            <!-- Invoice lines form (mobile): add airline fields after account_id -->
+            <xpath expr="//field[@name='invoice_line_ids']//form//field[@name='account_id']" position="after">
+                <group invisible="not parent.is_airline_invoice or display_type">
+                    <field name="air_ticket_no"/>
+                    <field name="air_pax_name"/>
+                    <field name="air_basic_fare" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="air_vat_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="air_taxes_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="air_baq_protect" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="air_bill_diff" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="air_ins_premium" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="air_total_amount" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
