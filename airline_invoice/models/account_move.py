@@ -95,6 +95,13 @@ class AccountMove(models.Model):
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
+    is_airline_invoice = fields.Boolean(
+        string="Is Airline Invoice",
+        related="move_id.is_airline_invoice",
+        readonly=True,
+        store=False,
+    )
+
     air_ticket_no = fields.Char(string="Ticket No")
     air_pax_name = fields.Char(string="Pax Name")
 
