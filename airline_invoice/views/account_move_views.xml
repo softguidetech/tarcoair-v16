@@ -12,7 +12,7 @@
                         type="action"
                         string="Print Airline Invoice"
                         class="btn-secondary"
-                        invisible="not is_airline_invoice"/>
+                        attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
             </xpath>
 
             <!-- Add flag (hidden) -->
@@ -24,13 +24,20 @@
             <xpath expr="//field[@name='tax_totals']" position="before">
                 <group class="oe_subtotal_footer">
                     <field name="is_airline_invoice" invisible="1"/>
-                    <field name="airline_total_basic_fare" readonly="1" nolabel="0" invisible="not is_airline_invoice"/>
-                    <field name="airline_total_vat" readonly="1" invisible="not is_airline_invoice"/>
-                    <field name="airline_total_taxes" readonly="1" invisible="not is_airline_invoice"/>
-                    <field name="airline_total_baq_protect" readonly="1" invisible="not is_airline_invoice"/>
-                    <field name="airline_total_bill_diff" readonly="1" invisible="not is_airline_invoice"/>
-                    <field name="airline_total_ins_premium" readonly="1" invisible="not is_airline_invoice"/>
-                    <field name="airline_grand_total" readonly="1" invisible="not is_airline_invoice"/>
+                    <field name="airline_total_basic_fare" readonly="1" nolabel="0"
+                           attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
+                    <field name="airline_total_vat" readonly="1"
+                           attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
+                    <field name="airline_total_taxes" readonly="1"
+                           attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
+                    <field name="airline_total_baq_protect" readonly="1"
+                           attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
+                    <field name="airline_total_bill_diff" readonly="1"
+                           attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
+                    <field name="airline_total_ins_premium" readonly="1"
+                           attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
+                    <field name="airline_grand_total" readonly="1"
+                           attrs="{'invisible': [('is_airline_invoice', '=', False)]}"/>
                 </group>
             </xpath>
 
@@ -52,14 +59,22 @@
                 <field name="is_airline_invoice" invisible="1"/>
                 <field name="display_type" invisible="1"/>
                 <group>
-                    <field name="air_ticket_no" invisible="not is_airline_invoice or display_type"/>
-                    <field name="air_pax_name" invisible="not is_airline_invoice or display_type"/>
-                    <field name="air_basic_fare" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_airline_invoice or display_type"/>
-                    <field name="air_vat_amount" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_airline_invoice or display_type"/>
-                    <field name="air_taxes_amount" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_airline_invoice or display_type"/>
-                    <field name="air_baq_protect" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_airline_invoice or display_type"/>
-                    <field name="air_bill_diff" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_airline_invoice or display_type"/>
-                    <field name="air_ins_premium" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not is_airline_invoice or display_type"/>
+                    <field name="air_ticket_no"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
+                    <field name="air_pax_name"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
+                    <field name="air_basic_fare" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
+                    <field name="air_vat_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
+                    <field name="air_taxes_amount" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
+                    <field name="air_baq_protect" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
+                    <field name="air_bill_diff" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
+                    <field name="air_ins_premium" widget="monetary" options="{'currency_field': 'currency_id'}"
+                           attrs="{'invisible': ['|', ('is_airline_invoice', '=', False), ('display_type', '!=', False)]}"/>
                 </group>
             </xpath>
         </field>
