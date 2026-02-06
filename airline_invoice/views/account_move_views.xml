@@ -13,7 +13,7 @@
 
             <!-- Add Airline totals block near totals -->
             <xpath expr="//field[@name='tax_totals']" position="before">
-                <group invisible="not is_airline_invoice" class="oe_subtotal_footer">
+                <group  class="oe_subtotal_footer">
                     <field name="airline_total_basic_fare" readonly="1" nolabel="0"/>
                     <field name="airline_total_vat" readonly="1"/>
                     <field name="airline_total_taxes" readonly="1"/>
@@ -41,7 +41,7 @@
             <!-- Invoice lines form (mobile): add airline fields after account_id -->
             <xpath expr="//field[@name='invoice_line_ids']//form//field[@name='account_id']" position="after">
                 <field name="is_airline_invoice" invisible="1"/>
-                <group invisible="not is_airline_invoice or display_type">
+                <group>
                     <field name="air_ticket_no"/>
                     <field name="air_pax_name"/>
                     <field name="air_basic_fare" widget="monetary" options="{'currency_field': 'currency_id'}"/>
