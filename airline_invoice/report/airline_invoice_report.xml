@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Paperformat (optional but helps keep layout consistent) -->
+    <record id="paperformat_airline_invoice" model="report.paperformat">
+        <field name="name">Airline Invoice</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="dpi">90</field>
+    </record>
+
+    <!-- Report Action -->
+    <record id="action_report_airline_invoice" model="ir.actions.report">
+        <field name="name">Airline Invoice</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">airline_invoice.report_airline_invoice</field>
+        <field name="report_file">airline_invoice.report_airline_invoice</field>
+        <field name="paperformat_id" ref="airline_invoice.paperformat_airline_invoice"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <!-- Only show for Airline Invoices -->
+        <field name="print_report_name">'Airline Invoice - %s' % (object.name or '')</field>
+    </record>
+</odoo>
+
+

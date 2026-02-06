@@ -12,7 +12,7 @@
     <!-- Menu -->
     <menuitem id="menu_airline_invoice_root"
               name="Airline Invoices"
-              parent="account.menu_finance"
+              parent="account.menu_finance_receivables"
               sequence="45"
               action="action_airline_customer_invoices"
               groups="account.group_account_invoice"/>
