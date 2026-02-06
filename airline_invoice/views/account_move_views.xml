@@ -16,8 +16,8 @@
             </xpath>
 
             <!-- Add flag (hidden) -->
-            <xpath expr="//sheet" position="inside">
-                <field name="is_airline_invoice" invisible="1"/>
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="is_airline_invoice" />
             </xpath>
 
             <!-- Add Airline totals block near totals -->
