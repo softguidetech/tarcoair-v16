@@ -22,7 +22,10 @@
         <field name="report_name">airline_invoice.report_airline_invoice</field>
         <field name="report_file">airline_invoice.report_airline_invoice</field>
         <field name="paperformat_id" ref="airline_invoice.paperformat_airline_invoice"/>
-        <!-- Not bound globally: we add a form button visible only on Airline Invoices -->
+        <!-- Bind to account.move so it appears in Print menu, but only for Airline Invoices -->
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="domain">[('is_airline_invoice', '=', True), ('move_type', '=', 'out_invoice')]</field>
         <field name="print_report_name">'Airline Invoice - %s' % (object.name or '')</field>
     </record>
 </odoo>
