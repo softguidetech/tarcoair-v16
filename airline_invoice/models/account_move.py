@@ -75,7 +75,9 @@ class AccountMove(models.Model):
                 move.airline_grand_total = 0.0
                 continue
 
-            lines = move.invoice_line_ids.filtered(lambda l: not l.display_type)
+            # In Odoo 16 invoice product lines usually have display_type = 'product'.
+            # Sections/notes have 'line_section'/'line_note' and must be excluded.
+            lines = move.invoice_line_ids.filtered(lambda l: l.display_type in (False, "product"))
             move.airline_total_basic_fare = sum(lines.mapped("air_basic_fare"))
             move.airline_total_vat = sum(lines.mapped("air_vat_amount"))
             move.airline_total_taxes = sum(lines.mapped("air_taxes_amount"))

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_airline_invoice" t-name="airline_invoice.report_airline_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-if="o.is_airline_invoice and o.move_type == 'out_invoice'">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2 style="margin-bottom: 6px;">Airline Invoice</h2>
+
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col-6">
+                                    <strong>Customer:</strong>
+                                    <span t-esc="o.partner_id.name"/>
+                                    <t t-if="o.partner_id.airline_root">
+                                        <br/>
+                                        <strong>Root:</strong>
+                                        <span t-esc="o.partner_id.airline_root"/>
+                                    </t>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <div><strong>Invoice #:</strong> <span t-esc="o.name or ''"/></div>
+                                    <div><strong>Invoice Date:</strong> <span t-esc="o.invoice_date or ''"/></div>
+                                </div>
+                            </div>
+
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Ticket No</th>
+                                        <th>Pax Name</th>
+                                        <th class="text-end">Basic Fare</th>
+                                        <th class="text-end">VAT</th>
+                                        <th class="text-end">Taxes</th>
+                                        <th class="text-end">BAQ/Protect</th>
+                                        <th class="text-end">Bill Diff</th>
+                                        <th class="text-end">Ins. Premium</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="lines" t-value="o.invoice_line_ids.filtered(lambda l: l.display_type in (False, 'product'))"/>
+                                    <t t-foreach="lines" t-as="l">
+                                        <tr>
+                                            <td><span t-esc="l.air_ticket_no or ''"/></td>
+                                            <td><span t-esc="l.air_pax_name or ''"/></td>
+                                            <td class="text-end"><span t-esc="formatLang(l.air_basic_fare or 0.0, currency_obj=o.currency_id)"/></td>
+                                            <td class="text-end"><span t-esc="formatLang(l.air_vat_amount or 0.0, currency_obj=o.currency_id)"/></td>
+                                            <td class="text-end"><span t-esc="formatLang(l.air_taxes_amount or 0.0, currency_obj=o.currency_id)"/></td>
+                                            <td class="text-end"><span t-esc="formatLang(l.air_baq_protect or 0.0, currency_obj=o.currency_id)"/></td>
+                                            <td class="text-end"><span t-esc="formatLang(l.air_bill_diff or 0.0, currency_obj=o.currency_id)"/></td>
+                                            <td class="text-end"><span t-esc="formatLang(l.air_ins_premium or 0.0, currency_obj=o.currency_id)"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <div class="row" style="margin-top: 12px;">
+                                <div class="col-6"/>
+                                <div class="col-6">
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>Basic Fare Total</strong></td>
+                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_basic_fare or 0.0, currency_obj=o.currency_id)"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>VAT Total</strong></td>
+                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_vat or 0.0, currency_obj=o.currency_id)"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Taxes Total</strong></td>
+                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_taxes or 0.0, currency_obj=o.currency_id)"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>BAQ/Protect Total</strong></td>
+                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_baq_protect or 0.0, currency_obj=o.currency_id)"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Bill Diff Total</strong></td>
+                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_bill_diff or 0.0, currency_obj=o.currency_id)"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Ins. Premium Total</strong></td>
+                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_ins_premium or 0.0, currency_obj=o.currency_id)"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Airline Grand Total</strong></td>
+                                                <td class="text-end"><strong t-esc="formatLang(o.airline_grand_total or 0.0, currency_obj=o.currency_id)"/></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
+
+
