@@ -43,12 +43,12 @@
                                         <tr>
                                             <td><span t-esc="l.air_ticket_no or ''"/></td>
                                             <td><span t-esc="l.air_pax_name or ''"/></td>
-                                            <td class="text-end"><span t-esc="formatLang(l.air_basic_fare or 0.0, currency_obj=o.currency_id)"/></td>
-                                            <td class="text-end"><span t-esc="formatLang(l.air_vat_amount or 0.0, currency_obj=o.currency_id)"/></td>
-                                            <td class="text-end"><span t-esc="formatLang(l.air_taxes_amount or 0.0, currency_obj=o.currency_id)"/></td>
-                                            <td class="text-end"><span t-esc="formatLang(l.air_baq_protect or 0.0, currency_obj=o.currency_id)"/></td>
-                                            <td class="text-end"><span t-esc="formatLang(l.air_bill_diff or 0.0, currency_obj=o.currency_id)"/></td>
-                                            <td class="text-end"><span t-esc="formatLang(l.air_ins_premium or 0.0, currency_obj=o.currency_id)"/></td>
+                                            <td class="text-end"><span t-field="l.air_basic_fare" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td class="text-end"><span t-field="l.air_vat_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td class="text-end"><span t-field="l.air_taxes_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td class="text-end"><span t-field="l.air_baq_protect" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td class="text-end"><span t-field="l.air_bill_diff" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td class="text-end"><span t-field="l.air_ins_premium" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                         </tr>
                                     </t>
                                 </tbody>
@@ -61,31 +61,31 @@
                                         <tbody>
                                             <tr>
                                                 <td><strong>Basic Fare Total</strong></td>
-                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_basic_fare or 0.0, currency_obj=o.currency_id)"/></td>
+                                                <td class="text-end"><span t-field="o.airline_total_basic_fare" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                             </tr>
                                             <tr>
                                                 <td><strong>VAT Total</strong></td>
-                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_vat or 0.0, currency_obj=o.currency_id)"/></td>
+                                                <td class="text-end"><span t-field="o.airline_total_vat" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                             </tr>
                                             <tr>
                                                 <td><strong>Taxes Total</strong></td>
-                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_taxes or 0.0, currency_obj=o.currency_id)"/></td>
+                                                <td class="text-end"><span t-field="o.airline_total_taxes" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                             </tr>
                                             <tr>
                                                 <td><strong>BAQ/Protect Total</strong></td>
-                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_baq_protect or 0.0, currency_obj=o.currency_id)"/></td>
+                                                <td class="text-end"><span t-field="o.airline_total_baq_protect" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                             </tr>
                                             <tr>
                                                 <td><strong>Bill Diff Total</strong></td>
-                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_bill_diff or 0.0, currency_obj=o.currency_id)"/></td>
+                                                <td class="text-end"><span t-field="o.airline_total_bill_diff" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                             </tr>
                                             <tr>
                                                 <td><strong>Ins. Premium Total</strong></td>
-                                                <td class="text-end"><span t-esc="formatLang(o.airline_total_ins_premium or 0.0, currency_obj=o.currency_id)"/></td>
+                                                <td class="text-end"><span t-field="o.airline_total_ins_premium" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                             </tr>
                                             <tr>
                                                 <td><strong>Airline Grand Total</strong></td>
-                                                <td class="text-end"><strong t-esc="formatLang(o.airline_grand_total or 0.0, currency_obj=o.currency_id)"/></td>
+                                                <td class="text-end"><strong t-field="o.airline_grand_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
                                             </tr>
                                         </tbody>
                                     </table>
