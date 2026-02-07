@@ -24,31 +24,73 @@
                                 </div>
                             </div>
 
+                            <t t-set="lines" t-value="o.invoice_line_ids.filtered(lambda l: l.display_type in (False, 'product'))"/>
+                            <t t-set="has_basic_fare" t-value="any((l.air_basic_fare or 0) != 0 for l in lines)"/>
+                            <t t-set="has_vat" t-value="any((l.air_vat_amount or 0) != 0 for l in lines)"/>
+                            <t t-set="has_taxes" t-value="any((l.air_taxes_amount or 0) != 0 for l in lines)"/>
+                            <t t-set="has_baq_protect" t-value="any((l.air_baq_protect or 0) != 0 for l in lines)"/>
+                            <t t-set="has_bill_diff" t-value="any((l.air_bill_diff or 0) != 0 for l in lines)"/>
+                            <t t-set="has_ins_premium" t-value="any((l.air_ins_premium or 0) != 0 for l in lines)"/>
                             <table class="table table-sm o_main_table">
                                 <thead>
                                     <tr>
                                         <th>Ticket No</th>
                                         <th>Pax Name</th>
-                                        <th class="text-end">Basic Fare</th>
-                                        <th class="text-end">VAT</th>
-                                        <th class="text-end">Taxes</th>
-                                        <th class="text-end">BAQ/Protect</th>
-                                        <th class="text-end">Bill Diff</th>
-                                        <th class="text-end">Ins. Premium</th>
+                                        <t t-if="has_basic_fare"><th class="text-end">Basic Fare</th></t>
+                                        <t t-if="has_vat"><th class="text-end">VAT</th></t>
+                                        <t t-if="has_taxes"><th class="text-end">Taxes</th></t>
+                                        <t t-if="has_baq_protect"><th class="text-end">BAQ/Protect</th></t>
+                                        <t t-if="has_bill_diff"><th class="text-end">Bill Diff</th></t>
+                                        <t t-if="has_ins_premium"><th class="text-end">Ins. Premium</th></t>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-set="lines" t-value="o.invoice_line_ids.filtered(lambda l: l.display_type in (False, 'product'))"/>
                                     <t t-foreach="lines" t-as="l">
                                         <tr>
                                             <td><span t-esc="l.air_ticket_no or ''"/></td>
                                             <td><span t-esc="l.air_pax_name or ''"/></td>
-                                            <td class="text-end"><span t-field="l.air_basic_fare" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            <td class="text-end"><span t-field="l.air_vat_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            <td class="text-end"><span t-field="l.air_taxes_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            <td class="text-end"><span t-field="l.air_baq_protect" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            <td class="text-end"><span t-field="l.air_bill_diff" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            <td class="text-end"><span t-field="l.air_ins_premium" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <t t-if="has_basic_fare">
+                                                <td class="text-end">
+                                                    <t t-if="(l.air_basic_fare or 0) != 0">
+                                                        <span t-field="l.air_basic_fare" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <t t-if="has_vat">
+                                                <td class="text-end">
+                                                    <t t-if="(l.air_vat_amount or 0) != 0">
+                                                        <span t-field="l.air_vat_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <t t-if="has_taxes">
+                                                <td class="text-end">
+                                                    <t t-if="(l.air_taxes_amount or 0) != 0">
+                                                        <span t-field="l.air_taxes_amount" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <t t-if="has_baq_protect">
+                                                <td class="text-end">
+                                                    <t t-if="(l.air_baq_protect or 0) != 0">
+                                                        <span t-field="l.air_baq_protect" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <t t-if="has_bill_diff">
+                                                <td class="text-end">
+                                                    <t t-if="(l.air_bill_diff or 0) != 0">
+                                                        <span t-field="l.air_bill_diff" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </t>
+                                                </td>
+                                            </t>
+                                            <t t-if="has_ins_premium">
+                                                <td class="text-end">
+                                                    <t t-if="(l.air_ins_premium or 0) != 0">
+                                                        <span t-field="l.air_ins_premium" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                                    </t>
+                                                </td>
+                                            </t>
                                         </tr>
                                     </t>
                                 </tbody>
@@ -59,34 +101,48 @@
                                 <div class="col-6">
                                     <table class="table table-sm">
                                         <tbody>
-                                            <tr>
-                                                <td><strong>Basic Fare Total</strong></td>
-                                                <td class="text-end"><span t-field="o.airline_total_basic_fare" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>VAT Total</strong></td>
-                                                <td class="text-end"><span t-field="o.airline_total_vat" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Taxes Total</strong></td>
-                                                <td class="text-end"><span t-field="o.airline_total_taxes" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>BAQ/Protect Total</strong></td>
-                                                <td class="text-end"><span t-field="o.airline_total_baq_protect" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Bill Diff Total</strong></td>
-                                                <td class="text-end"><span t-field="o.airline_total_bill_diff" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Ins. Premium Total</strong></td>
-                                                <td class="text-end"><span t-field="o.airline_total_ins_premium" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>Airline Grand Total</strong></td>
-                                                <td class="text-end"><strong t-field="o.airline_grand_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                            </tr>
+                                            <t t-if="(o.airline_total_basic_fare or 0) != 0">
+                                                <tr>
+                                                    <td><strong>Basic Fare Total</strong></td>
+                                                    <td class="text-end"><span t-field="o.airline_total_basic_fare" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="(o.airline_total_vat or 0) != 0">
+                                                <tr>
+                                                    <td><strong>VAT Total</strong></td>
+                                                    <td class="text-end"><span t-field="o.airline_total_vat" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="(o.airline_total_taxes or 0) != 0">
+                                                <tr>
+                                                    <td><strong>Taxes Total</strong></td>
+                                                    <td class="text-end"><span t-field="o.airline_total_taxes" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="(o.airline_total_baq_protect or 0) != 0">
+                                                <tr>
+                                                    <td><strong>BAQ/Protect Total</strong></td>
+                                                    <td class="text-end"><span t-field="o.airline_total_baq_protect" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="(o.airline_total_bill_diff or 0) != 0">
+                                                <tr>
+                                                    <td><strong>Bill Diff Total</strong></td>
+                                                    <td class="text-end"><span t-field="o.airline_total_bill_diff" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="(o.airline_total_ins_premium or 0) != 0">
+                                                <tr>
+                                                    <td><strong>Ins. Premium Total</strong></td>
+                                                    <td class="text-end"><span t-field="o.airline_total_ins_premium" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="(o.airline_grand_total or 0) != 0">
+                                                <tr>
+                                                    <td><strong>Airline Grand Total</strong></td>
+                                                    <td class="text-end"><strong t-field="o.airline_grand_total" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                </tr>
+                                            </t>
                                         </tbody>
                                     </table>
                                 </div>
