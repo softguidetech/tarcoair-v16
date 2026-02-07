@@ -9,6 +9,7 @@
         "views/airline_invoice_menus.xml",
         "views/account_move_views.xml",
         "views/res_partner_views.xml",
+        "views/report_invoice_views.xml",
         "report/airline_invoice_report.xml",
         "report/airline_invoice_templates.xml",
     ],
