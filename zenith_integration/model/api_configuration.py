@@ -360,6 +360,32 @@ class APIConfiguration(models.Model):
                 except:
                     start_date_dt = datetime.combine(fields.Date.from_string(str(start_date)), datetime.min.time())
 
+            # Helper function to get field value from nested object or direct attribute
+            def get_field_value(source, field_names, default=''):
+                """Try to get field value from nested object or direct attribute"""
+                if not source:
+                    return default
+                for field_name in field_names:
+                    try:
+                        value = getattr(source, field_name, None)
+                        if value is not None and value != '':
+                            return value
+                    except:
+                        continue
+                return default
+            
+            # Debug: Log first record's available attributes (only once)
+            import logging
+            _logger = logging.getLogger(__name__)
+            if response.Tickets and response.Tickets.OdooTicket:
+                first_record = response.Tickets.OdooTicket[0]
+                try:
+                    # Try to get all attributes from the Zeep object
+                    available_attrs = [attr for attr in dir(first_record) if not attr.startswith('_')]
+                    _logger.info("Available attributes in OdooTicket: %s", available_attrs[:50])  # Log first 50
+                except:
+                    pass
+            
             for record_data in response.Tickets.OdooTicket:
                 # Filter records by date - only include records from start_date onwards
                 # Use getattr for Zeep objects (not dictionaries)
@@ -399,7 +425,16 @@ class APIConfiguration(models.Model):
                     # Convert taxes_list to string format for taxes field
                     taxes_string = ', '.join([f"{t['name']}: {t['amount']}" for t in taxes_list])
 
-                passenger_name = getattr(record_data, 'PassengerName', '')
+                # Try to get passenger information - check if it's nested
+                passenger_info = getattr(record_data, 'PassengerInfo', None) or getattr(record_data, 'TravelerInfo', None) or getattr(record_data, 'TIF', None)
+                flight_info = getattr(record_data, 'FlightInfo', None) or getattr(record_data, 'TravelInfo', None) or getattr(record_data, 'TVL', None)
+                
+                passenger_name = ''
+                if passenger_info:
+                    passenger_name = getattr(passenger_info, 'Name', '') or getattr(passenger_info, 'PassengerName', '') or ''
+                else:
+                    passenger_name = getattr(record_data, 'PassengerName', '') or getattr(record_data, 'TIFTravelerFirstName', '') or ''
+                
                 passenger_name_parts = passenger_name.split() if passenger_name else []
                 passenger_first_name = passenger_name_parts[0] if passenger_name_parts else False
                 passenger_surname = ' '.join(passenger_name_parts[1:]) if len(passenger_name_parts) > 1 else False
@@ -437,31 +472,34 @@ class APIConfiguration(models.Model):
                     'pnr_creator': getattr(record_data, 'PNRCreator', ''),
                     'base_fair': getattr(record_data, 'BaseFareSaleCurrency', '') or '',
                     'sale_statement_status': getattr(record_data, 'SaleStatementStatus', ''),
-                    'iata_passenger_type': getattr(record_data, 'IATAPassengerType', '') or '',
-                    'passenger_civility': getattr(record_data, 'PassengerCivility', '') or '',
-                    'passenger_surname': passenger_surname or '',
-                    'passenger_first_name': passenger_first_name or '',
-                    'nationality': getattr(record_data, 'Nationality', '') or '',
-                    'date_of_birth': getattr(record_data, 'DateOfBirth', None),
-                    'place_of_birth': getattr(record_data, 'PlaceOfBirth', '') or '',
-                    'passport_number': getattr(record_data, 'PassportNumber', '') or '',
-                    'email_address': getattr(record_data, 'EmailAddress', '') or '',
-                    'mobile_number': getattr(record_data, 'MobileNumber', '') or '',
-                    'flight_number': getattr(record_data, 'FlightNumber', '') or '',
-                    'flight_date': getattr(record_data, 'FlightDate', None),
-                    'class_of_service': getattr(record_data, 'ClassOfService', '') or '',
-                    'booking_class': getattr(record_data, 'BookingClass', '') or '',
-                    'coupon_status': getattr(record_data, 'CouponStatus', '') or '',
-                    'aircraft_type': getattr(record_data, 'AircraftType', '') or '',
-                    'commission': getattr(record_data, 'CommissionAmountSaleCurrency', '') or '',
-                    'discount': getattr(record_data, 'DiscountAmountSaleCurrency', '') or '',
-                    'tour_code_discount': getattr(record_data, 'TourCodeDiscountSaleCurrency', '') or '',
-                    'adjustment': getattr(record_data, 'AdjustmentAmountSaleCurrency', '') or '',
-                    'penalty': getattr(record_data, 'PenaltyAmountSaleCurrency', '') or '',
-                    'acm': getattr(record_data, 'ACMAmountSaleCurrency', '') or '',
-                    'adm': getattr(record_data, 'ADMAmountSaleCurrency', '') or '',
-                    'baggage_supplement': getattr(record_data, 'BaggageSupplementAmountSaleCurrency', '') or '',
-                    'baggage_supplement_cancelation': getattr(record_data, 'BaggageSupplementCancellationAmountSaleCurrency', '') or '',
+                    # Passenger information - try nested object first, then TIF prefix, then direct names
+                    'iata_passenger_type': get_field_value(passenger_info, ['IATAPassengerType', 'TIFIATAPassengerType']) or getattr(record_data, 'TIFIATAPassengerType', '') or getattr(record_data, 'IATAPassengerType', '') or '',
+                    'passenger_civility': get_field_value(passenger_info, ['PassengerCivility', 'Civility', 'TIFPassengerCivility']) or getattr(record_data, 'TIFPassengerCivility', '') or getattr(record_data, 'PassengerCivility', '') or '',
+                    'passenger_surname': get_field_value(passenger_info, ['Surname', 'TravelerSurname', 'TIFTravelerSurname']) or getattr(record_data, 'TIFTravelerSurname', '') or passenger_surname or '',
+                    'passenger_first_name': get_field_value(passenger_info, ['FirstName', 'TravelerFirstName', 'TIFTravelerFirstName']) or getattr(record_data, 'TIFTravelerFirstName', '') or passenger_first_name or '',
+                    'nationality': get_field_value(passenger_info, ['Nationality', 'TIFNationality']) or getattr(record_data, 'TIFNationality', '') or getattr(record_data, 'Nationality', '') or '',
+                    'date_of_birth': get_field_value(passenger_info, ['DateOfBirth', 'TIFDateOfBirth'], None) or getattr(record_data, 'TIFDateOfBirth', None) or getattr(record_data, 'DateOfBirth', None),
+                    'place_of_birth': get_field_value(passenger_info, ['PlaceOfBirth', 'TIFPlaceOfBirth']) or getattr(record_data, 'TIFPlaceOfBirth', '') or getattr(record_data, 'PlaceOfBirth', '') or '',
+                    'passport_number': get_field_value(passenger_info, ['PassportNumber', 'TIFPassportNumber']) or getattr(record_data, 'TIFPassportNumber', '') or getattr(record_data, 'PassportNumber', '') or '',
+                    'email_address': get_field_value(passenger_info, ['EmailAddress', 'Email', 'TIFEmailAddress']) or getattr(record_data, 'TIFEmailAddress', '') or getattr(record_data, 'EmailAddress', '') or '',
+                    'mobile_number': get_field_value(passenger_info, ['MobileNumber', 'Mobile', 'Phone', 'TIFMobileNumber']) or getattr(record_data, 'TIFMobileNumber', '') or getattr(record_data, 'MobileNumber', '') or '',
+                    # Flight information - try nested object first, then TVL prefix, then direct names
+                    'flight_number': get_field_value(flight_info, ['FlightNumber', 'TVLFlightNumber']) or getattr(record_data, 'TVLFlightNumber', '') or getattr(record_data, 'FlightNumber', '') or '',
+                    'flight_date': get_field_value(flight_info, ['DepartureDateAndHourLT', 'FlightDate', 'TVLDepartureDateAndHourLT'], None) or getattr(record_data, 'TVLDepartureDateAndHourLT', None) or getattr(record_data, 'FlightDate', None),
+                    'class_of_service': get_field_value(flight_info, ['CabinClassOfServiceCode', 'ClassOfService', 'TVLCabinClassOfServiceCode']) or getattr(record_data, 'TVLCabinClassOfServiceCode', '') or getattr(record_data, 'ClassOfService', '') or '',
+                    'booking_class': get_field_value(flight_info, ['ClassCodePRBD', 'BookingClass', 'TVLClassCodePRBD']) or getattr(record_data, 'TVLClassCodePRBD', '') or getattr(record_data, 'BookingClass', '') or '',
+                    'coupon_status': getattr(record_data, 'ID_CPNAeropackStatus', '') or getattr(record_data, 'CouponStatus', '') or getattr(record_data, 'CPNAeropackStatus', '') or '',
+                    'aircraft_type': get_field_value(flight_info, ['AircraftType', 'TVLAircraftType']) or getattr(record_data, 'TVLAircraftType', '') or getattr(record_data, 'AircraftType', '') or '',
+                    # Financial fields - try various possible field names
+                    'commission': getattr(record_data, 'CPNFCommissionAmountSaleCurrency', '') or getattr(record_data, 'CommissionAmountSaleCurrency', '') or getattr(record_data, 'Commission', '') or '',
+                    'discount': getattr(record_data, 'DiscountAmountSaleCurrency', '') or getattr(record_data, 'Discount', '') or '',
+                    'tour_code_discount': getattr(record_data, 'TourCodeDiscountSaleCurrency', '') or getattr(record_data, 'TourCodeDiscount', '') or '',
+                    'adjustment': getattr(record_data, 'AdjustmentAmountSaleCurrency', '') or getattr(record_data, 'Adjustment', '') or '',
+                    'penalty': getattr(record_data, 'CPNPenaltyAmountSaleCurrency', '') or getattr(record_data, 'PenaltyAmountSaleCurrency', '') or getattr(record_data, 'Penalty', '') or '',
+                    'acm': getattr(record_data, 'ACMAmountInSaleCurrency', '') or getattr(record_data, 'ACMAmountSaleCurrency', '') or getattr(record_data, 'ACM', '') or '',
+                    'adm': getattr(record_data, 'ADMAmountInSaleCurrency', '') or getattr(record_data, 'ADMAmountSaleCurrency', '') or getattr(record_data, 'ADM', '') or '',
+                    'baggage_supplement': getattr(record_data, 'EBDAmountExcessBagPayedSaleCurrency', '') or getattr(record_data, 'BaggageSupplementAmountSaleCurrency', '') or getattr(record_data, 'BaggageSupplement', '') or '',
+                    'baggage_supplement_cancelation': getattr(record_data, 'BaggageSupplementCancellationAmountSaleCurrency', '') or getattr(record_data, 'BaggageSupplementCancellation', '') or '',
                     'tax_a3': taxes_list[0]['amount'] if taxes_list else None,  # Extract tax amount for tax_a3
                     'tax_ac': taxes_list[1]['amount'] if len(taxes_list) > 1 else None,  # Extract tax amount for tax_ac
                     'tax_ae': taxes_list[2]['amount'] if len(taxes_list) > 2 else None,  # Extract tax amount for tax_ae
