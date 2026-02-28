@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_zenith_flown_ticket_form" model="ir.ui.view">
+        <field name="name">zenith.flown.ticket.form</field>
+        <field name="model">flown.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="4" colspan="4">
+                        <field name="date" readonly="1"/>
+                        <field name="customer_ref" readonly="1"/>
+                        <field name="export_id" readonly="1"/>
+                        <field name="pnr_alphanumeric" readonly="1"/>
+                        <field name="iata_ticket_number" readonly="1"/>
+                        <field name="iata_ticket_check_digit" readonly="1"/>
+                        <field name="coupon_order_on_ticket" readonly="1"/>
+                        <field name="coupon_order_on_segment" readonly="1"/>
+                        <field name="Original_iata_ticket_number" readonly="1"/>
+                        <field name="Original_iata_ticket_check_digit" readonly="1"/>
+                        <field name="exchanged_iata_ticket_number" readonly="1"/>
+                        <field name="exchanged_iata_ticket_check_digit" readonly="1"/>
+                        <field name="zenith_coupon_status" readonly="1"/>
+                        <field name="aircraft_type" readonly="1"/>
+                        <field name="arrival_element" readonly="1"/>
+                        <field name="continuation_element" readonly="1"/>
+                        <field name="class_of_service" readonly="1"/>
+                        <field name="airline_designator" readonly="1"/>
+                        <field name="Flight_number" readonly="1"/>
+                        <field name="local_dep_datetime" readonly="1"/>
+                        <field name="local_arr_datetime" readonly="1"/>
+                        <field name="departure_airport" readonly="1"/>
+                        <field name="arrival_airport" readonly="1"/>
+                        <field name="booking_class" readonly="1"/>
+                        <field name="coupon_service" readonly="1"/>
+                        <field name="fare_basis_class" readonly="1"/>
+                        <field name="point_of_sale" readonly="1"/>
+                        <field name="point_of_sale_code" readonly="1"/>
+                        <field name="payment_type_identifier" readonly="1"/>
+                        <field name="customer_name" readonly="1"/>
+                        <field name="coupon_price_taxes_commission" readonly="1"/>
+                        <field name="coupon_price_taxes" readonly="1"/>
+                        <field name="total_turnover_amount" readonly="1"/>
+                        <field name="coupon_commission_amount" readonly="1"/>
+                        <field name="total_taxes_already" readonly="1"/>
+                        <field name="coupon_taxes_amount" readonly="1"/>
+                        <field name="iata_taxes_amount" readonly="1"/>
+                        <field name="airline_taxes_amount" readonly="1"/>
+                        <field name="yq_tax_amount" readonly="1"/>
+                        <field name="yr_tax_amount" readonly="1"/>
+                        <field name="service_fee_taxes_amount" readonly="1"/>
+                        <field name="issuance_tax_amount" readonly="1"/>
+                        <field name="total_amount" readonly="1"/>
+                        <field name="total_amount_excl" readonly="1"/>
+                        <field name="coupon_penalty_amount" readonly="1"/>
+                        <field name="excess_baggage_weight" readonly="1"/>
+                        <field name="excess_baggage_fee_collected" readonly="1"/>
+                        <field name="acm" readonly="1"/>
+                        <field name="adm" readonly="1"/>
+                        <field name="coupon_mileage" readonly="1"/>
+                        <field name="ticket_mileage" readonly="1"/>
+                        <field name="pnr_of_operating_airline" readonly="1"/>
+                        <field name="designator_of_operating_airline" readonly="1"/>
+                        <field name="flight_number_on_operating_airline" readonly="1"/>
+                        <field name="booking_class_on_operating_airline" readonly="1"/>
+                        <field name="pnr_of_marketing_airline" readonly="1"/>
+                        <field name="designator_of_marketing_airline" readonly="1"/>
+                        <field name="flight_number_of_marketing_airline" readonly="1"/>
+                        <field name="sales_currency" readonly="1"/>
+                        <field name="iata_passenger_type" readonly="1"/>
+                        <field name="passenger_civility" readonly="1"/>
+                        <field name="passenger_surname" readonly="1"/>
+                        <field name="passenger_first_name" readonly="1"/>
+                        <field name="datetime_lt_of_issuance" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="flown_ticket_view_tree" model="ir.ui.view">
+        <field name="name">flown.ticket</field>
+        <field name="model">flown.ticket</field>
+        <field name="arch" type="xml">
+            <tree string="flown_ticket_list">
+                 <field name="date"/>
+                        <field name="coupon_issued_created"/>
+                        <field name="coupon_issued_modified"/>
+<!--                        <field name="customer_id"/>-->
+                        <field name="customer_ref"/>
+                        <field name="export_id"/>
+                        <field name="pnr_alphanumeric"/>
+                        <field name="iata_ticket_number"/>
+                        <field name="iata_ticket_check_digit"/>
+                        <field name="coupon_order_on_ticket" optional="hide"/>
+                        <field name="coupon_order_on_segment" optional="hide"/>
+                        <field name="Original_iata_ticket_number" optional="hide"/>
+                        <field name="Original_iata_ticket_check_digit" optional="hide"/>
+                        <field name="exchanged_iata_ticket_number" optional="hide"/>
+                        <field name="exchanged_iata_ticket_check_digit" optional="hide"/>
+                        <field name="zenith_coupon_status" optional="hide"/>
+                        <field name="aircraft_type" optional="hide"/>
+                        <field name="arrival_element" optional="hide"/>
+                        <field name="continuation_element" optional="hide"/>
+                        <field name="class_of_service" optional="hide"/>
+                        <field name="airline_designator" optional="hide"/>
+                        <field name="Flight_number" optional="hide"/>
+                        <field name="local_dep_datetime" optional="hide"/>
+                        <field name="local_arr_datetime" optional="hide"/>
+                        <field name="departure_airport" optional="hide"/>
+                        <field name="arrival_airport" optional="hide"/>
+                        <field name="booking_class" optional="hide"/>
+                        <field name="coupon_service" optional="hide"/>
+                        <field name="fare_basis_class" optional="hide"/>
+                        <field name="point_of_sale" optional="hide"/>
+                        <field name="point_of_sale_code" optional="hide"/>
+                        <field name="payment_type_identifier" optional="hide"/>
+                        <field name="customer_name" optional="hide"/>
+                        <field name="coupon_price_taxes_commission" optional="hide"/>
+                        <field name="coupon_price_taxes" optional="hide"/>
+                        <field name="total_turnover_amount" optional="hide"/>
+                        <field name="coupon_commission_amount" optional="hide"/>
+                        <field name="total_taxes_already" optional="hide"/>
+                        <field name="coupon_taxes_amount" optional="hide"/>
+                        <field name="iata_taxes_amount" optional="hide"/>
+                        <field name="airline_taxes_amount" optional="hide"/>
+                        <field name="yq_tax_amount" optional="hide"/>
+                        <field name="yr_tax_amount" optional="hide"/>
+                        <field name="service_fee_taxes_amount" optional="hide"/>
+                        <field name="issuance_tax_amount" optional="hide"/>
+                        <field name="total_amount" optional="hide"/>
+                        <field name="total_amount_excl" optional="hide"/>
+                        <field name="coupon_penalty_amount" optional="hide"/>
+                        <field name="excess_baggage_weight" optional="hide"/>
+                        <field name="excess_baggage_fee_collected" optional="hide"/>
+                        <field name="acm" optional="hide"/>
+                        <field name="adm" optional="hide"/>
+                        <field name="coupon_mileage" optional="hide"/>
+                        <field name="ticket_mileage" optional="hide"/>
+                        <field name="pnr_of_operating_airline" optional="hide"/>
+                        <field name="designator_of_operating_airline" optional="hide"/>
+                        <field name="flight_number_on_operating_airline" optional="hide"/>
+                        <field name="booking_class_on_operating_airline" optional="hide"/>
+                        <field name="pnr_of_marketing_airline" optional="hide"/>
+                        <field name="designator_of_marketing_airline" optional="hide"/>
+                        <field name="flight_number_of_marketing_airline" optional="hide"/>
+                        <field name="sales_currency" optional="hide"/>
+                        <field name="iata_passenger_type" optional="hide"/>
+                        <field name="passenger_civility" optional="hide"/>
+                        <field name="passenger_surname" optional="hide"/>
+                        <field name="passenger_first_name" optional="hide"/>
+                        <field name="datetime_lt_of_issuance" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="action_zenith_flown_ticket" model="ir.actions.act_window">
+        <field name="name">Flown Ticket</field>
+        <field name="res_model">flown.ticket</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_zenith_flown_ticket" parent="menu_zenith" name="Flown Ticket"
+              action="action_zenith_flown_ticket"/>
+
+</odoo>

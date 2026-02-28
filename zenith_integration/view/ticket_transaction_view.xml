@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_zenith_ticket_transaction_form" model="ir.ui.view">
+        <field name="name">zenith.ticket.transaction.form</field>
+        <field name="model">ticket.transaction</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test" class="btn btn-primary" type="object" string="Test"/>
+                    <button name="action_invoice" class="btn btn-primary" type="object" string="Create Invoice"/>
+
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="view_invoice" class="oe_stat_button"
+                                icon="fa-bars" >
+                            <field name="count_invoice" widget="statinfo" string="Invoice"/>
+                        </button>
+                    </div>
+                    <group col="4" colspan="4">
+                        <field name="date" />
+                        <field name="company_id" />
+                        <field name="sale_statement_export_id" />
+                        <field name="pnr_alphanumeric" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="pnr_zenith" readonly="1"/>
+                        <field name="record_locator" />
+                        <field name="heading_st_type" readonly="1"/>
+                        <field name="iata_agency_code" readonly="1"/>
+                        <field name="point_of_sales" readonly="1"/>
+                        <field name="customer" readonly="1"/>
+                        <field name="payment_type" readonly="1"/>
+                        <field name="balance_sale_currency" />
+                        <field name="yq_tax_amount" readonly="1"/>
+                        <field name="yr_tax_amount" readonly="1"/>
+                        <field name="service_fee_tax_amount" readonly="1"/>
+                        <field name="insurance_tax_amount" readonly="1"/>
+                        <field name="other_tax_amount" readonly="1"/>
+                        <field name="airline_tax_amount" readonly="1"/>
+                        <field name="iata_tax_amount" readonly="1"/>
+                        <field name="total_tax_amount" readonly="1"/>
+                        <field name="sale_agent" readonly="1"/>
+                        <field name="original_ticket_number" readonly="1"/>
+                        <field name="ticket_number" readonly="1"/>
+                        <field name="exchanged_ticket_number" readonly="1"/>
+                        <field name="customer_id" readonly="1"/>
+                        <field name="journal_type" readonly="1"/>
+                        <field name="taxes_list" readonly="1"/>
+                        <field name="fair_basis_list" readonly="1"/>
+                        <field name="pnr_creator" readonly="1"/>
+                        <field name="base_fair" readonly="1"/>
+                        <field name="sale_statement_status" readonly="1"/>
+                        <field name="taxes" readonly="1"/>
+                        <field name="tax_a3" readonly="1"/>
+                        <field name="tax_ac" readonly="1"/>
+                        <field name="tax_ae" readonly="1"/>
+                        <field name="iata_passenger_type" readonly="1"/>
+                        <field name="passenger_civility" readonly="1"/>
+                        <field name="passenger_surname" readonly="1"/>
+                        <field name="passenger_first_name" readonly="1"/>
+                        <field name="nationality" readonly="1"/>
+                        <field name="date_of_birth" readonly="1"/>
+                        <field name="place_of_birth" readonly="1"/>
+                        <field name="passport_number" readonly="1"/>
+                        <field name="email_address" readonly="1"/>
+                        <field name="mobile_number" readonly="1"/>
+                        <field name="flight_number" readonly="1"/>
+                        <field name="flight_date" readonly="1"/>
+                        <field name="class_of_service" readonly="1"/>
+                        <field name="booking_class" readonly="1"/>
+                        <field name="coupon_status" readonly="1"/>
+                        <field name="aircraft_type" readonly="1"/>
+                        <field name="commission" readonly="1"/>
+                        <field name="discount" readonly="1"/>
+                        <field name="tour_code_discount" readonly="1"/>
+                        <field name="adjustment" readonly="1"/>
+                        <field name="penalty" readonly="1"/>
+                        <field name="acm" readonly="1"/>
+                        <field name="adm" readonly="1"/>
+                        <field name="baggage_supplement" readonly="1"/>
+                        <field name="baggage_supplement_cancelation" readonly="1"/>
+
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="transaction_ticket_view_tree" model="ir.ui.view">
+        <field name="name">Ticket Transaction</field>
+        <field name="model">ticket.transaction</field>
+        <field name="arch" type="xml">
+            <tree string="ticket_transaction_list">
+                <field name="date" readonly="1"/>
+                <field name="sale_statement_export_id"/>
+                <field name="pnr_alphanumeric" />
+                <field name="name"/>
+                <field name="pnr_zenith" />
+                <field name="record_locator" />
+                <field name="heading_st_type" />
+                <field name="iata_agency_code" />
+                <field name="point_of_sales" />
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_zenith_ticket_transaction" model="ir.actions.act_window">
+        <field name="name">Ticket Transaction</field>
+        <field name="res_model">ticket.transaction</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_zenith" name="Zenith" sequence="7" web_icon="zenith_integration,static/description/icon.jpg"/>
+    <menuitem id="menu_zenith_ticket_transaction" parent="menu_zenith" name="Ticket Transaction"
+              action="action_zenith_ticket_transaction"/>
+
+</odoo>
