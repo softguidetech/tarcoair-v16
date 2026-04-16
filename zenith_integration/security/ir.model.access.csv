@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_zenith_ticket_transaction,zenith.ticket.transaction,model_ticket_transaction,base.group_user,1,1,1,0
-access_zenith_flown_ticket,zenith.flown.ticket,model_flown_ticket,base.group_user,1,1,1,0
-access_zenith_credit_limit,zenith.credit.limit,model_credit_limit,base.group_user,1,1,1,0
-access_zenith_api_configuration,zenith_api_configuration,model_zenith_api_configuration,base.group_user,1,1,1,1
